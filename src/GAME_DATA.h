@@ -22,14 +22,14 @@
 // WINDOW STATUS
 #define WS_HEIGHT 3
 #define WS_WIDTH 60
-#define WS_Y 38
-#define WS_X 5
+#define WS_Y 45
+#define WS_X 3
 
 // WINDOW INVENTORY
 #define WI_HEIGHT 3
 #define WI_WIDTH 18
-#define WI_Y 41
-#define WI_X 5
+#define WI_Y 46
+#define WI_X 3
 
 // for episode
 typedef enum {
