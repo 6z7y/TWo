@@ -15,15 +15,34 @@ int handle_control(int c, Player *player, Map *map)
     case KEY_LEFT:  case 'h': move_player(player, map, -1, 0);  break;
     case KEY_RIGHT: case 'l': move_player(player, map, 1, 0);   break;
 
+
+    case '+': if (player->health <= 3) player_heal_up(player); break;
+    case '-': if (player->health > 0) player_heal_dn(player); break;
+
     case 'Q':                                                   return 1;
   }
   
   return 0; 
 }
 
-void heal_player(Player *p) { 
+char *health_ascii(int health)
+{
+    if (health == 3) return "❤ ❤ ❤";
+    if (health == 2) return "❤ ❤  ";
+    if (health == 1) return "❤    ";
+    return "x x x";
+}
+
+void player_heal_up(Player *p)
+{ 
   p->health++;
   if (p->health > 3) p->health = 3;
+}
+
+void player_heal_dn(Player *p)
+{
+  p->health--;
+  if (p->health < 1) p->health = 0;
 }
 
 // Check if tile is walkable
