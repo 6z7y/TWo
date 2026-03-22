@@ -6,13 +6,13 @@
 void ncurses_mode(int mode)
 {
   if (mode) {
+    setlocale(LC_ALL, ""); // for support utf-8
     initscr(); // init ncurses
     curs_set(0); // hide cursor
     noecho(); // no print input
     nodelay(stdscr, TRUE);
     cbreak(); // no buffer
     keypad(stdscr, TRUE); // allow key arrow
-    setlocale(LC_ALL, ""); // for support utf-8
     start_color(); // color support
     use_default_colors();
     init_pair(1, COLOR_RED, COLOR_BLACK);     // Walls
