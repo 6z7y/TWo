@@ -20,9 +20,7 @@ void draw_map(WINDOW *win, Map *map, Player *player) {
                 char tile = map->layout[i][j];
 
                 if      (tile == TILE_WALL)                         wattron(win, COLOR_PAIR(1));
-                else if (tile == TILE_DOOR)                         wattron(win, COLOR_PAIR(2));
-                else if (tile == TILE_KEY || tile == TILE_TREASURE) wattron(win, COLOR_PAIR(3));
-                else if (tile == TILE_POTION)                       wattron(win, COLOR_PAIR(4));
+                else if (tile == TILE_ITEM)                         wattron(win, COLOR_PAIR(3)); // green like items
                 else if (tile == TILE_EXIT)                         wattron(win, COLOR_PAIR(5));
 
                 mvwaddch(win, i + 1, j + 1, tile);
@@ -42,9 +40,6 @@ void draw_map(WINDOW *win, Map *map, Player *player) {
 void render_game(NEW_Wind *wind_game, NEW_Wind *wind_status, NEW_Wind *wind_inventory, int episode, Player *player, int frame) {
 
     werase(stdscr);
-    // werase(wind_game->wind);
-    // werase(wind_status->wind);
-    // werase(wind_inventory->wind);
 
     box(stdscr, 0, 0);
     box(wind_game->wind, 0, 0);
@@ -59,7 +54,8 @@ void render_game(NEW_Wind *wind_game, NEW_Wind *wind_status, NEW_Wind *wind_inve
 
     mvwprintw(wind_status->wind, 0, 0, "Health: %s", health_ascii(player->health) );
 
-    mvwprintw(wind_inventory->wind, 1, 2, "  |  |  |  |  ");
+    mvwprintw(wind_inventory->wind, 1, 2, " %c | %c | %c | %c | %c ",
+        player->inventory[0], player->inventory[1], player->inventory[2], player->inventory[3], player->inventory[4]);
 
     draw_two(stdscr, 38, 4, player->health, frame);
 }
@@ -84,8 +80,9 @@ int main(void)
     int frame     = 0;
     int anim_tick = 0;
 
-    // 1 start ncurses
-    ncurses_mode(1);
+    // 1 start game
+    GAME_context game_ctx = {.game_running = 1};
+    ncurses_mode(1); // init ncurses
 
     // 2. load map data into struct
     load_episode1(&episode1_struct);
@@ -101,6 +98,11 @@ int main(void)
     // 4. setup user
     Player player = {0};
     setup_user_for_ep(&player, &current_episode);
+    player.inventory[0] = '.';
+    player.inventory[1] = '.';
+    player.inventory[2] = '.';
+    player.inventory[3] = '.';
+    player.inventory[4] = '.';
 
     while (1) {
         getmaxyx(stdscr, y, x);

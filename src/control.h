@@ -9,6 +9,8 @@ char *health_ascii(int health);
 void player_heal_up(Player *p);
 void player_heal_dn(Player *p);
 
+void pick_up(Map *map, Player *player, int y, int x);
+
 void move_player(Player *player, Map *map, int dx, int dy);
 
 #endif

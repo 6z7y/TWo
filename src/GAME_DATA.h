@@ -5,12 +5,7 @@
 
 // Tile types
 #define TILE_WALL '#'
-#define TILE_FLOOR '.'
-#define TILE_DOOR '+'
-#define TILE_KEY 'K'
-#define TILE_TREASURE '$'
-#define TILE_POTION '!'
-#define TILE_SWORD '/'
+#define TILE_ITEM 'C'    // chocolate
 #define TILE_EXIT 'E'
 
 // WINDOW GAME
@@ -27,8 +22,8 @@
 
 // WINDOW INVENTORY
 #define WI_HEIGHT 3
-#define WI_WIDTH 18
-#define WI_Y 46
+#define WI_WIDTH 24
+#define WI_Y 48
 #define WI_X 3
 
 // for episode
@@ -43,18 +38,18 @@ typedef struct {
   WINDOW *wind;
 } NEW_Wind;
 
-
 typedef struct {
   char name[32];
   char layout[WG_HEIGHT][WG_WIDTH + 1];
   int player_start_x, player_start_y;
-  int key_x, key_y;
+  int exit_x, exit_y;
 } Map;
 
 // Player structure
 typedef struct {
   int health;
   int y, x;
+  char inventory[5];
 } Player;
 
 // Item structure for pickup
@@ -64,5 +59,10 @@ typedef struct {
   int value;
   void (*effect)(Player *);
 } Item;
+
+typedef struct {
+  int game_running;
+
+} GAME_context;
 
 #endif

@@ -10,8 +10,8 @@ void load_episode1(Map *map)
     strncpy(map->name, "Cave of Secrets", sizeof(map->name));
     map->player_start_x = 15;
     map->player_start_y = 6;
-    map->key_x          = 40;
-    map->key_y          = 15;
+    map->exit_x         = 40;
+    map->exit_y         = 15;
 
     /* layout — copy each row */
     strncpy(map->layout[ 0], "########################################################################################", WG_WIDTH);
@@ -47,6 +47,9 @@ void load_episode1(Map *map)
     strncpy(map->layout[30], "#                                                                                      #", WG_WIDTH);
     strncpy(map->layout[31], "#                                                                                      #", WG_WIDTH);
     strncpy(map->layout[32], "########################################################################################", WG_WIDTH);
+
+    map->layout[8][26] = 'C';   // row 10, col 20
+    map->layout[8][29] = 'j';   // row 10, col 20
 
     /* you can now program changes here — e.g. add a trap at runtime:
      *   map->layout[20][30] = TILE_POTION;
