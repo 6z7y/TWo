@@ -25,8 +25,7 @@ void draw_map(WINDOW *win, Map *map, Player *player) {
 
                 mvwaddch(win, i + 1, j + 1, tile);
 
-                wattroff(win, COLOR_PAIR(1) | COLOR_PAIR(2) |
-                              COLOR_PAIR(3) | COLOR_PAIR(4) | COLOR_PAIR(5));
+                wattroff(win, COLOR_PAIR(1) | COLOR_PAIR(2) | COLOR_PAIR(3) | COLOR_PAIR(4) | COLOR_PAIR(5));
             }
         }
     }
@@ -37,7 +36,7 @@ void draw_map(WINDOW *win, Map *map, Player *player) {
 
 
 /* CHANGE 2: int frame not int* */
-void render_game(NEW_Wind *wind_game, NEW_Wind *wind_status, NEW_Wind *wind_inventory, int episode, Player *player, int frame) {
+void render_game(NEW_Wind *wind_game, NEW_Wind *wind_inventory, int episode, Player *player, int frame) {
 
     werase(stdscr);
 
@@ -47,14 +46,19 @@ void render_game(NEW_Wind *wind_game, NEW_Wind *wind_status, NEW_Wind *wind_inve
     box(wind_inventory->wind, 0, 0);
 
     mvprintw(0, 4, " TWo ");
+
+    wattron(wind_game->wind, A_UNDERLINE);
+    mvwprintw(wind_game->wind, 0, 2, " Ep1: kanojo helper ");
+    wattroff(wind_game->wind, A_UNDERLINE);
+
     mvprintw(LINES - 2, 4, "Controls: (Arrow/Vim keys): Move | (+/-): incress/decress health | (Q) = Quit");
 
     if (episode == 1)
         draw_map(wind_game->wind, &episode1_struct, player);
 
-    mvwprintw(wind_status->wind, 0, 0, "Health: %s", health_ascii(player->health) );
+    mvwprintw(stdscr, 45, 3, "Health: %s", health_ascii(player->health) );
 
-    mvwprintw(wind_inventory->wind, 1, 2, " %c | %c | %c | %c | %c ",
+    mvwprintw(wind_inventory->wind, 1, 1, " %c | %c | %c | %c | %c ",
         player->inventory[0], player->inventory[1], player->inventory[2], player->inventory[3], player->inventory[4]);
 
     draw_two(stdscr, 38, 4, player->health, frame);
@@ -92,7 +96,7 @@ int main(void)
 
     // 3. setup windowses
     NEW_Wind w_game      = { init_window_now(WG_HEIGHT, WG_WIDTH, WG_Y, WG_X) };
-    NEW_Wind w_status    = { init_window_now(WS_HEIGHT, WS_WIDTH, WS_Y, WS_X) };
+    // NEW_Wind w_status    = { init_window_now(WS_HEIGHT, WS_WIDTH, WS_Y, WS_X) };
     NEW_Wind w_inventory = { init_window_now(WI_HEIGHT, WI_WIDTH, WI_Y, WI_X) };
 
     // 4. setup user
@@ -118,12 +122,12 @@ int main(void)
         if (handle_control(c, &player, &episode1_struct) == 1) break;
 
         // 7. drawing
-        render_game(&w_game, &w_status, &w_inventory, current_episode, &player, frame);
+        render_game(&w_game, &w_inventory, current_episode, &player, frame);
 
         // 8. refreshing
         wnoutrefresh(stdscr);
         wnoutrefresh(w_game.wind);
-        wnoutrefresh(w_status.wind);
+        // wnoutrefresh(w_status.wind);
         wnoutrefresh(w_inventory.wind);
         doupdate();
 

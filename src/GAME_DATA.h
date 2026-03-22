@@ -14,17 +14,17 @@
 #define WG_Y 2
 #define WG_X 3
 
-// WINDOW STATUS
-#define WS_HEIGHT 3
-#define WS_WIDTH 60
-#define WS_Y 45
-#define WS_X 3
+// // WINDOW STATUS
+// #define WS_HEIGHT 3
+// #define WS_WIDTH 60
+// #define WS_Y 45
+// #define WS_X 3
 
 // WINDOW INVENTORY
 #define WI_HEIGHT 3
-#define WI_WIDTH 24
-#define WI_Y 48
-#define WI_X 3
+#define WI_WIDTH 21
+#define WI_Y 40
+#define WI_X 40
 
 // for episode
 typedef enum {
