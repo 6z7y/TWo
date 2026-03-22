@@ -3,9 +3,10 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include "Episodes/include_helper.h"
 #include "GAME_DATA.h"
 #include "control.h"
-#include "episodes.h"
+// #include "Episodes/include_helper.h"
 #include "menu.h"
 #include "utils.h"
 #include "drwing.h"
@@ -19,19 +20,19 @@ void draw_map(WINDOW *win, Map *map, Player *player) {
             for (int j = 0; j < WG_WIDTH - 2 && j < (int)strlen(map->layout[i]); j++) {
                 char tile = map->layout[i][j];
 
-                if      (tile == TILE_WALL)                         wattron(win, COLOR_PAIR(1));
-                else if (tile == TILE_ITEM)                         wattron(win, COLOR_PAIR(3)); // green like items
-                else if (tile == TILE_EXIT)                         wattron(win, COLOR_PAIR(5));
+                // if      (tile == TILE_WALL)                         wattron(win, COLOR_PAIR(1));
+                // else if (tile == TILE_ITEM)                         wattron(win, COLOR_PAIR(3)); // green like items
+                // else if (tile == TILE_EXIT)                         wattron(win, COLOR_PAIR(5));
 
                 mvwaddch(win, i + 1, j + 1, tile);
 
-                wattroff(win, COLOR_PAIR(1) | COLOR_PAIR(2) | COLOR_PAIR(3) | COLOR_PAIR(4) | COLOR_PAIR(5));
+                // wattroff(win, COLOR_PAIR(1) | COLOR_PAIR(2) | COLOR_PAIR(3) | COLOR_PAIR(4) | COLOR_PAIR(5));
             }
         }
     }
-    wattron(win, A_BOLD | COLOR_PAIR(6));
+    // wattron(win, A_BOLD | COLOR_PAIR(6));
     mvwprintw(win, player->y + 1, player->x + 1, "T");
-    wattroff(win, A_BOLD | COLOR_PAIR(6));
+    // wattroff(win, A_BOLD | COLOR_PAIR(6));
 }
 
 
@@ -113,7 +114,7 @@ int main(void)
 
         // 5. check terminal size
         if (x < 40 || y < 40) {
-            warn_term_size(&y, &x);
+            warn_term_size(y, x);
             continue;
         }
 
@@ -140,7 +141,8 @@ int main(void)
             anim_tick = 0;
         }
     }
-    werase(stdscr);
+    clear();
+    refresh();
 
     ncurses_mode(0);
     return 0;

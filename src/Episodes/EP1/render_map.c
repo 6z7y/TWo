@@ -1,7 +1,7 @@
 #include <string.h>
 #include <ncurses.h>
-#include "episodes.h"
-#include "GAME_DATA.h"
+
+#include "render_map.h"
 
 /* ── episode 1 : Cave of Secrets ────────────────── */
 void load_episode1(Map *map)
@@ -81,3 +81,4 @@ void load_episode1(Map *map)
 //     /* place exit */
 //     map->layout[20][70] = TILE_EXIT;
 // }
+

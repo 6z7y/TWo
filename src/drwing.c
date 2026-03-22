@@ -145,13 +145,13 @@ void draw_two(WINDOW *win, int top, int left, int hp, int frame)
                 /* stem */
                 ((r==3||r==4) && ch=='|');
  
-            if (bold) wattron(win,  COLOR_PAIR(pair) | A_BOLD);
-            else      wattron(win,  COLOR_PAIR(pair));
+            // if (bold) wattron(win,  COLOR_PAIR(pair) | A_BOLD);
+            // else      wattron(win,  COLOR_PAIR(pair));
  
             mvwaddch(win, top + r, left + c, ch);
  
-            if (bold) wattroff(win, COLOR_PAIR(pair) | A_BOLD);
-            else      wattroff(win, COLOR_PAIR(pair));
+            // if (bold) wattroff(win, COLOR_PAIR(pair) | A_BOLD);
+            // else      wattroff(win, COLOR_PAIR(pair));
         }
     }
 }
