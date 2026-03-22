@@ -10,48 +10,8 @@
 #include "utils.h"
 #include "drwing.h"
 
-Map episode1_struct = {
-    .name = "Cave of Secrets",
-    .player_start_x = 15,
-    .player_start_y = 6,
-    .key_x = 40,
-    .key_y = 15,
-    .layout = {
-        "########################################################################################",
-        "#                                                                                      #",
-        "#                                                                                      #",
-        "#                                                                                      #",
-        "#                                                                                      #",
-        "#         ||||||||||||||||||                                                           #",
-        "#         |                |                                                           #",
-        "#         |                |                                                           #",
-        "#         |                |                                                           #",
-        "#         |                |                                                           #",
-        "#         ||||||||||||||||||                                                           #",
-        "#             E                                                                        #",
-        "#                                                                                      #",
-        "#                                                                                      #",
-        "#                                                                                      #",
-        "#                                                                                      #",
-        "#                                                                                      #",
-        "#                                                                                      #",
-        "#                                                                                      #",
-        "#                                                                                      #",
-        "#                                                                                      #",
-        "#                                                                                      #",
-        "#                                                                                      #",
-        "#                                                                                      #",
-        "#                                                                                      #",
-        "#                                                                                      #",
-        "#                                                                                      #",
-        "#                                                                                      #",
-        "#                                                                                      #",
-        "#                                                                                      #",
-        "#                                                                                      #",
-        "#                                                                                      #",
-        "########################################################################################"
-    }
-};
+/* map is filled by load_episode1() in main */
+Map episode1_struct;
 
 void draw_map(WINDOW *win, Map *map, Player *player) {
     for (int i = 0; i < WG_HEIGHT - 1; i++) {
@@ -87,12 +47,7 @@ void render_game(NEW_Wind *wind_game, NEW_Wind *wind_status, NEW_Wind *wind_inve
     // werase(wind_inventory->wind);
 
     box(stdscr, 0, 0);
-wborder(wind_game->wind,
-        ACS_VLINE, ACS_VLINE,      // left, right
-        ACS_HLINE, ACS_HLINE,      // top, bottom
-        ACS_ULCORNER, ACS_URCORNER,// top-left, top-right
-        ACS_LLCORNER, ACS_LRCORNER // bottom-left, bottom-right
-);
+    box(wind_game->wind, 0, 0);
     // box(wind_status->wind, 0, 0);
     box(wind_inventory->wind, 0, 0);
 
@@ -132,7 +87,10 @@ int main(void)
     // 1 start ncurses
     ncurses_mode(1);
 
-    // 2. select episode
+    // 2. load map data into struct
+    load_episode1(&episode1_struct);
+
+    // 3. select episode
     int current_episode = select_episode();
 
     // 3. setup windowses
@@ -176,6 +134,7 @@ int main(void)
             anim_tick = 0;
         }
     }
+    werase(stdscr);
 
     ncurses_mode(0);
     return 0;
