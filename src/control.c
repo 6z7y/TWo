@@ -25,13 +25,6 @@ int handle_control(int c, Player *player, Map *map)
   return 0; 
 }
 
-char *health_ascii(int health)
-{
-    if (health == 3) return "❤ ❤ ❤";
-    if (health == 2) return "❤ ❤  ";
-    if (health == 1) return "❤    ";
-    return "x x x";
-}
 
 void player_heal_up(Player *p)
 { 
