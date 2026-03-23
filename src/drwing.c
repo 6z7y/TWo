@@ -1,7 +1,9 @@
+#include <ncurses.h>
 #include <string.h>
 #include "GAME_DATA.h"
 
 #include "Episodes/include_helper.h"
+#include "control.h"
 #include "drwing.h"
 
 #define TWO_ROWS 7
@@ -133,21 +135,21 @@ void draw_map(WINDOW *win, Map *map, Player *player) {
             for (int j = 0; j < WG_WIDTH - 2 && j < (int)strlen(map->layout[i]); j++) {
                 char tile = map->layout[i][j];
 
-                // if      (tile == TILE_WALL)                         wattron(win, COLOR_PAIR(1));
-                // else if (tile == TILE_ITEM)                         wattron(win, COLOR_PAIR(3)); // green like items
-                // else if (tile == TILE_EXIT)                         wattron(win, COLOR_PAIR(5));
+                if      (tile == TILE_WALL)                         wattron(win, COLOR_PAIR(1));
+                else if (tile == TILE_ITEM1 || tile == TILE_ITEM2)             wattron(win, COLOR_PAIR(3)); // green like items
+                else if (tile == TILE_EXIT1 || tile == TILE_EXIT2 || tile == TILE_EXIT3)          wattron(win, COLOR_PAIR(5));
+                else if (tile == TILE_CAGE) wattron(win, COLOR_PAIR(1));
 
                 mvwaddch(win, i + 1, j + 1, tile);
 
-                // wattroff(win, COLOR_PAIR(1) | COLOR_PAIR(2) | COLOR_PAIR(3) | COLOR_PAIR(4) | COLOR_PAIR(5));
+                wattroff(win, COLOR_PAIR(1) | COLOR_PAIR(2) | COLOR_PAIR(3) | COLOR_PAIR(4) | COLOR_PAIR(5));
             }
         }
     }
-    // wattron(win, A_BOLD | COLOR_PAIR(6));
+    wattron(win, A_BOLD | COLOR_PAIR(1));
     mvwprintw(win, player->y + 1, player->x + 1, "T");
-    // wattroff(win, A_BOLD | COLOR_PAIR(6));
+    wattroff(win, A_BOLD | COLOR_PAIR(1));
 }
-
 
 /* CHANGE 2: int frame not int* */
 void render_game(NEW_Wind *wind_game, NEW_Wind *wind_inventory, int episode, Player *player, int frame, Map *episode1_struct)
@@ -165,17 +167,27 @@ void render_game(NEW_Wind *wind_game, NEW_Wind *wind_inventory, int episode, Pla
     mvwprintw(wind_game->wind, 0, 2, " Ep1: kanojo helper ");
     wattroff(wind_game->wind, A_UNDERLINE);
 
-    mvprintw(LINES - 2, 4, "Controls: (Arrow/Vim keys): Move | (+/-): incress/decress health | (Q) = Quit");
+    mvprintw(LINES - 2, 4, "Controls: (Arrow/Vim keys): Move | (+/-): incress/decress health | (e): inventory open | (Q) = Quit");
 
     if (episode == 1) {
-      
         draw_map(wind_game->wind, episode1_struct, player);
     }
 
     mvwprintw(stdscr, 45, 3, "Health: %s", health_ascii(player->health) );
 
-    mvwprintw(wind_inventory->wind, 1, 1, " %c | %c | %c | %c | %c ",
-        player->inventory[0], player->inventory[1], player->inventory[2], player->inventory[3], player->inventory[4]);
+    // draw inventory panel if open
+    if (is_inventory_open()) {
+        mvwprintw(wind_inventory->wind, 1, 1, " %c | %c | %c | %c | %c ",
+            player->inventory[0], player->inventory[1],
+            player->inventory[2], player->inventory[3],
+            player->inventory[4]);
+        box(wind_inventory->wind, 0, 0);
+        mvwprintw(wind_inventory->wind, 0, 2, " inventory ");
+    } else {
+        werase(wind_inventory->wind);  // hide it
+    }
+
+    mvwprintw(wind_inventory->wind, 2, 2, " 'e' ");
 
     draw_two(stdscr, 38, 4, player->health, frame);
 }
@@ -184,7 +196,6 @@ int select_episode()
 {
   Episode ep = EP1_KIDNAPPING;
   return ep;
-
 }
 
 void setup_user_for_ep(Player *player, int *current_episode, Map *episode1_struct)

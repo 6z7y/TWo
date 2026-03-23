@@ -5,8 +5,12 @@
 
 // Tile types
 #define TILE_WALL '#'
-#define TILE_ITEM 'C'    // chocolate
-#define TILE_EXIT 'E'
+#define TILE_ITEM1 'C'    // chocolate
+#define TILE_ITEM2 'j'    // chocolate
+#define TILE_EXIT1 'E' 
+#define TILE_EXIT2 'X'
+#define TILE_EXIT3 'I'
+#define TILE_CAGE '|'
 
 // WINDOW GAME
 #define WG_HEIGHT 35

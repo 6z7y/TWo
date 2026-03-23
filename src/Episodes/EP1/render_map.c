@@ -25,7 +25,7 @@ void load_episode1(Map *map)
     strncpy(map->layout[ 8], "          |                |                                                            ", WG_WIDTH);
     strncpy(map->layout[ 9], "                           |                                                            ", WG_WIDTH);
     strncpy(map->layout[10], "          ||||||||||||||||||                                                            ", WG_WIDTH);
-    strncpy(map->layout[11], "              E                                                                         ", WG_WIDTH);
+    strncpy(map->layout[11], "              [EXI ]                                                                    ", WG_WIDTH);
     strncpy(map->layout[12], "                                                                                        ", WG_WIDTH);
     strncpy(map->layout[13], "                                                                                        ", WG_WIDTH);
     strncpy(map->layout[14], "                                                                                        ", WG_WIDTH);
@@ -48,8 +48,8 @@ void load_episode1(Map *map)
     strncpy(map->layout[31], "                                                                                        ", WG_WIDTH);
     strncpy(map->layout[32], "                                                                                        ", WG_WIDTH);
 
-    map->layout[8][26] = 'C';   // row 10, col 20
-    map->layout[8][29] = 'j';   // row 10, col 20
+    map->layout[8][26] = TILE_ITEM1;   // row 10, col 20
+    map->layout[8][29] = TILE_ITEM2;   // row 10, col 20
 
     /* you can now program changes here — e.g. add a trap at runtime:
      *   map->layout[20][30] = TILE_POTION;

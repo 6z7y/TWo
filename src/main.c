@@ -27,7 +27,6 @@ int main(void)
 
     // 3. setup windowses
     NEW_Wind w_game      = { init_window_now(WG_HEIGHT, WG_WIDTH, WG_Y, WG_X) };
-    // NEW_Wind w_status    = { init_window_now(WS_HEIGHT, WS_WIDTH, WS_Y, WS_X) };
     NEW_Wind w_inventory = { init_window_now(WI_HEIGHT, WI_WIDTH, WI_Y, WI_X) };
 
     // 4. setup user
@@ -46,7 +45,7 @@ int main(void)
 
         // 6. control
         c = getch();
-        if (handle_control(c, &player, &episode1_struct) == 1) break;
+        if (handle_control(c, &player, w_inventory.wind, &episode1_struct) == 1) break;
 
         // 7. drawing
         render_game(&w_game, &w_inventory, current_episode, &player, frame, &episode1_struct);

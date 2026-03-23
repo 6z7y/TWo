@@ -2,11 +2,12 @@
 #include <ncurses.h>
 #include <stdlib.h>
 
+
 #include "control.h"
 #include "GAME_DATA.h"
 
 
-int handle_control(int c, Player *player, Map *map)
+int handle_control(int c, Player *player, WINDOW *w_inventor, Map *map)
 {
   switch(c) {
 //            KEY                            do
@@ -15,6 +16,7 @@ int handle_control(int c, Player *player, Map *map)
     case KEY_LEFT:  case 'h': move_player(player, map, -1, 0);  break;
     case KEY_RIGHT: case 'l': move_player(player, map, 1, 0);   break;
 
+    case 'e': open_inventory(); break;
 
     case '+': if (player->health <= 3) player_heal_up(player); break;
     case '-': if (player->health > 0) player_heal_dn(player); break;
@@ -23,6 +25,19 @@ int handle_control(int c, Player *player, Map *map)
   }
   
   return 0; 
+}
+
+// control.c — open_inventory just toggles the flag
+static int inventory_open = 0;
+
+void open_inventory(void)
+{
+    inventory_open = !inventory_open;
+}
+
+int is_inventory_open(void)
+{
+    return inventory_open;
 }
 
 
@@ -62,7 +77,7 @@ int is_walkable(Map *map, int x, int y, Player *player) {
     
     // Walkable tiles
     
-    if(tile == ' ' || tile == TILE_ITEM || tile == TILE_EXIT) return 1;
+    if(tile == ' ' || tile == TILE_ITEM1 || tile == TILE_ITEM2) return 1;
     
     return 0;
 }
@@ -76,15 +91,16 @@ void move_player(Player *player, Map *map, int dx, int dy)
     if(is_walkable(map, new_x, new_y, player)) {
         char tile = map->layout[new_y][new_x];
         
-        if (map->layout[new_y][new_x] == TILE_ITEM)  pick_up(map, player, new_y, new_x);
+        if (map->layout[new_y][new_x] == TILE_ITEM1)  pick_up(map, player, new_y, new_x);
+        if (map->layout[new_y][new_x] == TILE_ITEM2)  pick_up(map, player, new_y, new_x);
         
         // Check for exit
-        if(tile == TILE_EXIT) {
-            mvprintw(LINES - 3, 4, "Congratulations! You escaped the cave!");
-            refresh();
-            napms(2000);
-            exit(0);
-        }
+        // if(tile == TILE_EXIT) {
+        //     mvprintw(LINES - 3, 4, "Congratulations! You escaped the cave!");
+        //     refresh();
+        //     napms(2000);
+        //     exit(0);
+        // }
         
         // Move player
         player->x = new_x;
