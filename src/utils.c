@@ -43,11 +43,6 @@ void ncurses_mode(int mode)
   }
 }
 
-WINDOW *init_window_now(int hei, int wid, int y, int x)
-{
-  return newwin(hei, wid, y, x);
-}
-
 void warn_term_size(int y, int x)
 {
   clear();

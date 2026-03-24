@@ -8,6 +8,27 @@
 #include "utils.h"
 #include "drwing.h"
 
+void setup_game(GAME_Context *game_ctx)
+{
+  // game on
+  game_ctx->game_running = 1;
+
+  // init window
+  game_ctx->w[0] = newwin(WG_HEIGHT, WG_WIDTH, WG_Y, WG_X);
+  game_ctx->w[1] = newwin(WI_HEIGHT, WI_WIDTH, WI_Y, WI_X);
+
+  // episode select
+  // 3. select episode
+  game_ctx->ep = select_episode();
+
+  // load map FIRST, then setup player
+  load_episode1(&game_ctx->map);
+  setup_user_for_ep(&game_ctx->player, &game_ctx->ep, &game_ctx->map);
+  for (int i = 0; i < 5; i++) game_ctx->player.inventory[i] = '.';
+}
+
+GAME_Context game_ctx = {0};
+
 int main(void) 
 {
     int c; // key
@@ -16,23 +37,10 @@ int main(void)
     int anim_tick = 0;
 
     // 1 start game
-    GAME_context game_ctx = {.game_running = 1};
     ncurses_mode(1); // init ncurses
-
-    Map episode1_struct;
-    load_episode1(&episode1_struct);
-
-    // 3. select episode
-    int current_episode = select_episode();
-
-    // 3. setup windowses
-    NEW_Wind w_game      = { init_window_now(WG_HEIGHT, WG_WIDTH, WG_Y, WG_X) };
-    NEW_Wind w_inventory = { init_window_now(WI_HEIGHT, WI_WIDTH, WI_Y, WI_X) };
-
-    // 4. setup user
-    Player player = {0};
-    setup_user_for_ep(&player, &current_episode, &episode1_struct);
-    for (int i=0; i<5; i++) player.inventory[i] = '.';
+                     //
+    // 2. setup game
+    setup_game(&game_ctx);
 
     while (game_ctx.game_running) {
         getmaxyx(stdscr, y, x);
@@ -45,15 +53,15 @@ int main(void)
 
         // 6. control
         c = getch();
-        if (handle_control(c, &player, w_inventory.wind, &episode1_struct) == 1) break;
+        if (handle_control(c, &game_ctx.player, &game_ctx.map) == 1) break;
 
         // 7. drawing
-        render_game(&w_game, &w_inventory, current_episode, &player, frame, &episode1_struct);
+        render_game(game_ctx.w[0], game_ctx.w[1], game_ctx.ep, &game_ctx.player, frame, &game_ctx.map);
 
         // 8. refreshing
         wnoutrefresh(stdscr);
-        wnoutrefresh(w_game.wind);
-        wnoutrefresh(w_inventory.wind);
+        wnoutrefresh(game_ctx.w[0]);
+        wnoutrefresh(game_ctx.w[1]);
         doupdate();
 
         usleep(16000);  /* 60fps */

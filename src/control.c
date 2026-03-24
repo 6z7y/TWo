@@ -6,29 +6,53 @@
 #include "control.h"
 #include "GAME_DATA.h"
 
-
-int handle_control(int c, Player *player, WINDOW *w_inventor, Map *map)
+/* use item from slot i — define effects here */
+void use_item(Player *player, int slot)
 {
+  if (player->inventory[slot] == '.') return; /* empty slot */
+ 
+  char item = player->inventory[slot];
+ 
+  if (item == TILE_ITEM1 || item == TILE_ITEM2) {
+    player_heal_up(player);               /* chocolate heals */
+  }
+ 
+  player->inventory[slot] = '.';          /* consume item */
+}
+
+int handle_control(int c, Player *player, Map *map)
+{
+  /* when inventory is open, only 1-5 and e work */
+  if (is_inventory_open()) {
+    switch(c) {
+      case '1': use_item(player, 0); break;
+      case '2': use_item(player, 1); break;
+      case '3': use_item(player, 2); break;
+      case '4': use_item(player, 3); break;
+      case '5': use_item(player, 4); break;
+      case 'e': open_inventory();    break;
+      case 'Q':                      return 1;
+    }
+    return 0;
+  }
+ 
+  /* normal game controls */
   switch(c) {
-//            KEY                            do
     case KEY_UP:    case 'k': move_player(player, map, 0, -1);  break;
     case KEY_DOWN:  case 'j': move_player(player, map, 0, 1);   break;
     case KEY_LEFT:  case 'h': move_player(player, map, -1, 0);  break;
     case KEY_RIGHT: case 'l': move_player(player, map, 1, 0);   break;
-
     case 'e': open_inventory(); break;
-
-    case '+': if (player->health <= 3) player_heal_up(player); break;
-    case '-': if (player->health > 0) player_heal_dn(player); break;
-
-    case 'Q':                                                   return 1;
+    case '+': if (player->health < 3) player_heal_up(player);   break;
+    case '-': if (player->health > 0) player_heal_dn(player);   break;
+    case 'Q':                                                    return 1;
   }
-  
-  return 0; 
+  return 0;
 }
 
 // control.c — open_inventory just toggles the flag
 static int inventory_open = 0;
+
 
 void open_inventory(void)
 {

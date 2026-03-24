@@ -5,24 +5,23 @@
 
 // Tile types
 #define TILE_WALL '#'
+#define TILE_CAGE '|'
+
 #define TILE_ITEM1 'C'    // chocolate
 #define TILE_ITEM2 'j'    // chocolate
+
 #define TILE_EXIT1 'E' 
 #define TILE_EXIT2 'X'
 #define TILE_EXIT3 'I'
-#define TILE_CAGE '|'
+
+// window
+#define NUM_WINDOW 2
 
 // WINDOW GAME
 #define WG_HEIGHT 35
-#define WG_WIDTH 90
+#define WG_WIDTH 91 // wid = 90 + \0
 #define WG_Y 2
 #define WG_X 3
-
-// // WINDOW STATUS
-// #define WS_HEIGHT 3
-// #define WS_WIDTH 60
-// #define WS_Y 45
-// #define WS_X 3
 
 // WINDOW INVENTORY
 #define WI_HEIGHT 3
@@ -37,17 +36,16 @@ typedef enum {
     EP3_BOSS_FIGHT = 3,
     EP4_HAPPY_ENDING = 4
 } Episode;
+// -----------
 
-typedef struct {
-  WINDOW *wind;
-} NEW_Wind;
-
+// about ep map
 typedef struct {
   char name[32];
-  char layout[WG_HEIGHT][WG_WIDTH + 1];
+  char layout[WG_HEIGHT][WG_WIDTH];
   int player_start_x, player_start_y;
   int exit_x, exit_y;
 } Map;
+// ------------
 
 // Player structure
 typedef struct {
@@ -55,6 +53,7 @@ typedef struct {
   int y, x;
   char inventory[5];
 } Player;
+// ----------------
 
 // Item structure for pickup
 typedef struct {
@@ -63,10 +62,18 @@ typedef struct {
   int value;
   void (*effect)(Player *);
 } Item;
+// -------------------------
 
+// structure context
 typedef struct {
   int game_running;
+  WINDOW *w[NUM_WINDOW];
+  Map map;
+  Episode ep;
+  Player player;
 
-} GAME_context;
+} GAME_Context;
+// -----------------
 
+extern GAME_Context game_ctx;
 #endif

@@ -130,20 +130,18 @@ char *health_ascii(int health)
 }
 
 void draw_map(WINDOW *win, Map *map, Player *player) {
-    for (int i = 0; i < WG_HEIGHT - 1; i++) {
-        if (strlen(map->layout[i]) > 0) {
-            for (int j = 0; j < WG_WIDTH - 2 && j < (int)strlen(map->layout[i]); j++) {
-                char tile = map->layout[i][j];
+    for (int i = 0; i < WG_HEIGHT; i++) {
+        for (int j = 0; j < (int)strlen(map->layout[i]); j++) {
+            char tile = map->layout[i][j];
 
-                if      (tile == TILE_WALL)                         wattron(win, COLOR_PAIR(1));
-                else if (tile == TILE_ITEM1 || tile == TILE_ITEM2)             wattron(win, COLOR_PAIR(3)); // green like items
-                else if (tile == TILE_EXIT1 || tile == TILE_EXIT2 || tile == TILE_EXIT3)          wattron(win, COLOR_PAIR(5));
-                else if (tile == TILE_CAGE) wattron(win, COLOR_PAIR(1));
+            if      (tile == TILE_WALL)                         wattron(win, COLOR_PAIR(1));
+            else if (tile == TILE_ITEM1 || tile == TILE_ITEM2)             wattron(win, COLOR_PAIR(3)); // green like items
+            else if (tile == TILE_EXIT1 || tile == TILE_EXIT2 || tile == TILE_EXIT3)          wattron(win, COLOR_PAIR(5));
+            else if (tile == TILE_CAGE) wattron(win, COLOR_PAIR(1));
 
-                mvwaddch(win, i + 1, j + 1, tile);
+            mvwaddch(win, i + 1, j + 1, tile);
 
-                wattroff(win, COLOR_PAIR(1) | COLOR_PAIR(2) | COLOR_PAIR(3) | COLOR_PAIR(4) | COLOR_PAIR(5));
-            }
+            wattroff(win, COLOR_PAIR(1) | COLOR_PAIR(2) | COLOR_PAIR(3) | COLOR_PAIR(4) | COLOR_PAIR(5));
         }
     }
     wattron(win, A_BOLD | COLOR_PAIR(1));
@@ -151,43 +149,69 @@ void draw_map(WINDOW *win, Map *map, Player *player) {
     wattroff(win, A_BOLD | COLOR_PAIR(1));
 }
 
-/* CHANGE 2: int frame not int* */
-void render_game(NEW_Wind *wind_game, NEW_Wind *wind_inventory, int episode, Player *player, int frame, Map *episode1_struct)
+void render_game(WINDOW *wind_game, WINDOW *wind_inventory, Episode ep, Player *player, int frame, Map *episode1_struct)
 {
     werase(stdscr);
 
+    // border 
     box(stdscr, 0, 0);
-    box(wind_game->wind, 0, 0);
-    // box(wind_status->wind, 0, 0);
-    box(wind_inventory->wind, 0, 0);
+    box(wind_game, 0, 0);
+    box(wind_inventory, 0, 0);
 
+    // title
     mvprintw(0, 4, " TWo ");
 
-    wattron(wind_game->wind, A_UNDERLINE);
-    mvwprintw(wind_game->wind, 0, 2, " Ep1: kanojo helper ");
-    wattroff(wind_game->wind, A_UNDERLINE);
+    // title wind game
+    wattron(wind_game, A_UNDERLINE);
+    mvwprintw(wind_game, 0, 2, " Ep1: kanojo helper ");
+    wattroff(wind_game, A_UNDERLINE);
 
+    // helper
     mvprintw(LINES - 2, 4, "Controls: (Arrow/Vim keys): Move | (+/-): incress/decress health | (e): inventory open | (Q) = Quit");
 
-    if (episode == 1) {
-        draw_map(wind_game->wind, episode1_struct, player);
-    }
+    draw_map(wind_game, episode1_struct, player);
+    (void)ep;
 
     mvwprintw(stdscr, 45, 3, "Health: %s", health_ascii(player->health) );
 
-    // draw inventory panel if open
+    werase(wind_inventory);
+
     if (is_inventory_open()) {
-        mvwprintw(wind_inventory->wind, 1, 1, " %c | %c | %c | %c | %c ",
+        /* big inventory window */
+        wresize(wind_inventory, 12, 40);
+        mvwin(wind_inventory,   20, 20);
+        box(wind_inventory, 0, 0);
+        mvwprintw(wind_inventory, 0, 2, " INVENTORY — press 1-5 to use, e to close ");
+
+        for (int i = 0; i < 5; i++) {
+            char item = player->inventory[i];
+            const char *name = (item == TILE_ITEM1) ? "Chocolate" :
+                               (item == TILE_ITEM2) ? "Candy"     : "-- empty --";
+            if (item == '.') {
+                mvwprintw(wind_inventory, 2 + i * 2, 3,
+                    "[%d]  .  %s", i + 1, name);
+            } else {
+                wattron(wind_inventory, COLOR_PAIR(3) | A_BOLD);
+                mvwprintw(wind_inventory, 2 + i * 2, 3,
+                    "[%d]  %c  %s", i + 1, item, name);
+                wattroff(wind_inventory, COLOR_PAIR(3) | A_BOLD);
+            }
+        }
+
+        mvwprintw(wind_inventory, 11, 3, " press e to close ");
+
+    } else {
+        /* small bar — always visible */
+        wresize(wind_inventory, WI_HEIGHT, WI_WIDTH);
+        mvwin(wind_inventory,   WI_Y, WI_X);
+        box(wind_inventory, 0, 0);
+        mvwprintw(wind_inventory, 0, 2, " bag ");
+        mvwprintw(wind_inventory, 1, 1, " %c | %c | %c | %c | %c ",
             player->inventory[0], player->inventory[1],
             player->inventory[2], player->inventory[3],
             player->inventory[4]);
-        box(wind_inventory->wind, 0, 0);
-        mvwprintw(wind_inventory->wind, 0, 2, " inventory ");
-    } else {
-        werase(wind_inventory->wind);  // hide it
+        mvwprintw(wind_inventory, 2, 2, " press e ");
     }
-
-    mvwprintw(wind_inventory->wind, 2, 2, " 'e' ");
 
     draw_two(stdscr, 38, 4, player->health, frame);
 }
@@ -198,9 +222,9 @@ int select_episode()
   return ep;
 }
 
-void setup_user_for_ep(Player *player, int *current_episode, Map *episode1_struct)
+void setup_user_for_ep(Player *player, Episode *ep, Map *episode1_struct)
 {
-  if (*current_episode == EP1_KIDNAPPING)
+  if (*ep == EP1_KIDNAPPING)
     *player = (Player){ .health = 1, .y = episode1_struct->player_start_y, .x = episode1_struct->player_start_x };
 }
 
@@ -246,13 +270,13 @@ void draw_two(WINDOW *win, int top, int left, int hp, int frame)
                 /* stem */
                 ((r==3||r==4) && ch=='|');
  
-            // if (bold) wattron(win,  COLOR_PAIR(pair) | A_BOLD);
-            // else      wattron(win,  COLOR_PAIR(pair));
+            if (bold) wattron(win,  COLOR_PAIR(pair) | A_BOLD);
+            else      wattron(win,  COLOR_PAIR(pair));
  
             mvwaddch(win, top + r, left + c, ch);
  
-            // if (bold) wattroff(win, COLOR_PAIR(pair) | A_BOLD);
-            // else      wattroff(win, COLOR_PAIR(pair));
+            if (bold) wattroff(win, COLOR_PAIR(pair) | A_BOLD);
+            else      wattroff(win, COLOR_PAIR(pair));
         }
     }
 }
