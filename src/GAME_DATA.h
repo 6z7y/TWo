@@ -14,20 +14,25 @@
 #define TILE_EXIT2 'X'
 #define TILE_EXIT3 'I'
 
-// window
+// how much window
 #define NUM_WINDOW 2
 
 // WINDOW GAME
 #define WG_HEIGHT 35
-#define WG_WIDTH 91 // wid = 90 + \0
+#define WG_WIDTH 90 // wid = 90 + \0
 #define WG_Y 2
 #define WG_X 3
 
-// WINDOW INVENTORY
-#define WI_HEIGHT 3
-#define WI_WIDTH 21
-#define WI_Y 40
-#define WI_X 40
+// WINDOW INVENTORY (Close/Open)
+#define WIC_HEIGHT 3
+#define WIC_WIDTH 21
+#define WIC_Y 40
+#define WIC_X 40
+
+#define WIO_HEIGHT 3
+#define WIO_WIDTH 21
+#define WIO_Y 40
+#define WIO_X 40
 
 // for episode
 typedef enum {
@@ -44,7 +49,7 @@ typedef struct {
   char layout[WG_HEIGHT][WG_WIDTH];
   int player_start_x, player_start_y;
   int exit_x, exit_y;
-} Map;
+} MAP_Structure;
 // ------------
 
 // Player structure
@@ -68,7 +73,7 @@ typedef struct {
 typedef struct {
   int game_running;
   WINDOW *w[NUM_WINDOW];
-  Map map;
+  MAP_Structure map;
   Episode ep;
   Player player;
 
