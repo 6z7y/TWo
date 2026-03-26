@@ -4,8 +4,8 @@
 #include "ep.h"
 
 /* each episode has one function that fills the Map */
-void load_episode1(Map *map);
-void load_episode2(Map *map);
+void load_episode1(MAP_Structure *map);
+void load_episode2(MAP_Structure *map);
 
 #endif
 

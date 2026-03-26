@@ -3,6 +3,6 @@
 
 #include "../../GAME_DATA.h"
 
-void load_episode1(Map *map);
+void load_episode1(MAP_Structure *map);
 
 #endif
