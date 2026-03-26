@@ -1,7 +1,16 @@
-#include <stdio.h>
 #include <stdlib.h>
 #include <ncurses.h>
 #include <locale.h>
+
+#include "GAME_DATA.h"
+#include "Episodes/include_helper.h"
+// #include "drwing.h"
+
+static inline void setup_user_for_map(Player *player, Episode *ep, MAP_Structure *episode1_struct)
+{
+  if (*ep == EP1_KIDNAPPING)
+    *player = (Player){ .health = 1, .y = episode1_struct->player_start_y, .x = episode1_struct->player_start_x };
+}
 
 // mode 1=ON, 0=OFF
 void ncurses_mode(int mode)
@@ -41,6 +50,31 @@ void ncurses_mode(int mode)
   else {
     endwin();
   }
+}
+
+int select_episode()
+{
+  Episode ep = EP1_KIDNAPPING;
+  return ep;
+}
+
+void setup_game(GAME_Context *game_ctx)
+{
+  // game on
+  game_ctx->game_running = 1;
+
+  // init window
+  game_ctx->w[0] = newwin(WG_HEIGHT, WG_WIDTH, WG_Y, WG_X);
+  game_ctx->w[1] = newwin(WIC_HEIGHT, WIC_WIDTH, WIC_Y, WIC_X);
+
+  // episode select
+  // 3. select episode
+  game_ctx->ep = select_episode();
+
+  // load map FIRST, then setup player
+  load_episode1(&game_ctx->map);
+  setup_user_for_map(&game_ctx->player, &game_ctx->ep, &game_ctx->map);
+  for (int i = 0; i < 5; i++) game_ctx->player.inventory[i] = '.';
 }
 
 void warn_term_size(int y, int x)
