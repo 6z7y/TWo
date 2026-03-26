@@ -8,8 +8,6 @@
 
 #define TWO_ROWS 7
 
-/* map is filled by load_episode1() in main */
-
 static const char *art[4][3][TWO_ROWS] = {
 
     /* ── 0  DEAD ──────────────────────────────── */
@@ -129,17 +127,17 @@ char *health_ascii(int health)
     return "x x x";
 }
 
-void draw_map(WINDOW *win, Map *map, Player *player) {
-    for (int i = 0; i < WG_HEIGHT; i++) {
-        for (int j = 0; j < (int)strlen(map->layout[i]); j++) {
+void draw_map(WINDOW *win, MAP_Structure *map, Player *player) {
+    for (int i = 0; i < WG_HEIGHT; i++) { // row
+        for (int j = 0; j < (int)strlen(map->layout[i]); j++) { // col
             char tile = map->layout[i][j];
 
-            if      (tile == TILE_WALL)                         wattron(win, COLOR_PAIR(1));
-            else if (tile == TILE_ITEM1 || tile == TILE_ITEM2)             wattron(win, COLOR_PAIR(3)); // green like items
-            else if (tile == TILE_EXIT1 || tile == TILE_EXIT2 || tile == TILE_EXIT3)          wattron(win, COLOR_PAIR(5));
-            else if (tile == TILE_CAGE) wattron(win, COLOR_PAIR(1));
+            if      (tile == TILE_WALL)                                              wattron(win, COLOR_PAIR(1));
+            else if (tile == TILE_ITEM1 || tile == TILE_ITEM2)                       wattron(win, COLOR_PAIR(3)); // green like items
+            else if (tile == TILE_EXIT1 || tile == TILE_EXIT2 || tile == TILE_EXIT3) wattron(win, COLOR_PAIR(5));
+            else if (tile == TILE_CAGE)                                              wattron(win, COLOR_PAIR(1));
 
-            mvwaddch(win, i + 1, j + 1, tile);
+            mvwaddch(win, i + 1, j + 1, tile); /////////////////////////////////////////////////////////////////////////// here i stop
 
             wattroff(win, COLOR_PAIR(1) | COLOR_PAIR(2) | COLOR_PAIR(3) | COLOR_PAIR(4) | COLOR_PAIR(5));
         }
@@ -149,28 +147,29 @@ void draw_map(WINDOW *win, Map *map, Player *player) {
     wattroff(win, A_BOLD | COLOR_PAIR(1));
 }
 
-void render_game(WINDOW *wind_game, WINDOW *wind_inventory, Episode ep, Player *player, int frame, Map *episode1_struct)
+void render_game(WINDOW *wind_game, WINDOW *wind_inventory, Episode ep, Player *player, int frame, MAP_Structure *map)
 {
-    werase(stdscr);
+  werase(stdscr); // clear screen
 
-    // border 
-    box(stdscr, 0, 0);
-    box(wind_game, 0, 0);
-    box(wind_inventory, 0, 0);
+  // title
+  mvprintw(0, 4, " TWo ");
 
-    // title
-    mvprintw(0, 4, " TWo ");
+  // title wind game
+  wattron(wind_game, A_UNDERLINE);
+  mvwprintw(wind_game, 0, 2, " Ep1: kanojo helper ");
+  wattroff(wind_game, A_UNDERLINE);
 
-    // title wind game
-    wattron(wind_game, A_UNDERLINE);
-    mvwprintw(wind_game, 0, 2, " Ep1: kanojo helper ");
-    wattroff(wind_game, A_UNDERLINE);
+  // helper
+  mvprintw(LINES - 2, 4, "Controls: (Arrow/Vim keys): Move | (+/-): incress/decress health | (e): inventory open | (Q) = Quit");
 
-    // helper
-    mvprintw(LINES - 2, 4, "Controls: (Arrow/Vim keys): Move | (+/-): incress/decress health | (e): inventory open | (Q) = Quit");
+  // border 
+  box(stdscr, 0, 0);
+  box(wind_game, 0, 0);
+  box(wind_inventory, 0, 0);
 
-    draw_map(wind_game, episode1_struct, player);
-    (void)ep;
+  draw_map(wind_game, map, player);
+  (void)ep;
+
 
     mvwprintw(stdscr, 45, 3, "Health: %s", health_ascii(player->health) );
 
@@ -202,8 +201,8 @@ void render_game(WINDOW *wind_game, WINDOW *wind_inventory, Episode ep, Player *
 
     } else {
         /* small bar — always visible */
-        wresize(wind_inventory, WI_HEIGHT, WI_WIDTH);
-        mvwin(wind_inventory,   WI_Y, WI_X);
+        wresize(wind_inventory, WIC_HEIGHT, WIC_WIDTH);
+        mvwin(wind_inventory,   WIC_Y, WIC_X);
         box(wind_inventory, 0, 0);
         mvwprintw(wind_inventory, 0, 2, " bag ");
         mvwprintw(wind_inventory, 1, 1, " %c | %c | %c | %c | %c ",
@@ -214,18 +213,6 @@ void render_game(WINDOW *wind_game, WINDOW *wind_inventory, Episode ep, Player *
     }
 
     draw_two(stdscr, 38, 4, player->health, frame);
-}
-
-int select_episode()
-{
-  Episode ep = EP1_KIDNAPPING;
-  return ep;
-}
-
-void setup_user_for_ep(Player *player, Episode *ep, Map *episode1_struct)
-{
-  if (*ep == EP1_KIDNAPPING)
-    *player = (Player){ .health = 1, .y = episode1_struct->player_start_y, .x = episode1_struct->player_start_x };
 }
 
 /* color pair IDs — must match what utils.c registers */
