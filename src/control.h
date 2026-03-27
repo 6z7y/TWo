@@ -3,17 +3,18 @@
 
 #include "GAME_DATA.h"
 
-int handle_control(int c, Player *player, Map *map);
 
-char *health_ascii(int health);
+int handle_control(int c, Player *player, MAP_Structure *map);
+
 void player_heal_up(Player *p);
 void player_heal_dn(Player *p);
 
-void use_item(Player *player, int slot);
-void pick_up(Map *map, Player *player, int y, int x);
-void open_inventory(void);
-int  is_inventory_open(void);
+int inventory_checker();
+static inline void swap_value_inventory(void);
 
-void move_player(Player *player, Map *map, int dx, int dy);
+void use_item(Player *player, int slot);
+void pick_up(MAP_Structure *map, Player *player, int y, int x);
+
+void move_player(Player *player, MAP_Structure *map, int dy, int dx);
 
 #endif

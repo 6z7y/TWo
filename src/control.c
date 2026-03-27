@@ -1,10 +1,41 @@
 #include <string.h>
-#include <ncurses.h>
 #include <stdlib.h>
-
+#include <ncurses.h>
 
 #include "control.h"
 #include "GAME_DATA.h"
+
+static int inventory_mode = 0;
+
+int handle_control(int c, Player *player, MAP_Structure *map)
+{
+  /* when inventory is open, only 1-5 and e work */
+  if (inventory_mode) {
+    switch(c) {
+      case '1': use_item(player, 0);    break;
+      case '2': use_item(player, 1);    break;
+      case '3': use_item(player, 2);    break;
+      case '4': use_item(player, 3);    break;
+      case '5': use_item(player, 4);    break;
+      case 'e': swap_value_inventory(); break;
+      case 'Q':                         return 1;
+    }
+    return 0;
+  }
+ 
+  /* normal game controls */
+  switch(c) {
+    case KEY_UP:    case 'k': move_player(player, map, -1, 0);  break;
+    case KEY_DOWN:  case 'j': move_player(player, map, 1, 0);   break;
+    case KEY_LEFT:  case 'h': move_player(player, map, 0, -1);  break;
+    case KEY_RIGHT: case 'l': move_player(player, map, 0, 1);   break;
+    case 'e':                 swap_value_inventory();           break;
+    case '+': if (player->health < 3) player_heal_up(player);   break;
+    case '-': if (player->health > 0) player_heal_dn(player);   break;
+    case 'Q':                                                   return 1;
+  }
+  return 0;
+}
 
 /* use item from slot i — define effects here */
 void use_item(Player *player, int slot)
@@ -20,50 +51,15 @@ void use_item(Player *player, int slot)
   player->inventory[slot] = '.';          /* consume item */
 }
 
-int handle_control(int c, Player *player, Map *map)
+int inventory_checker()
 {
-  /* when inventory is open, only 1-5 and e work */
-  if (is_inventory_open()) {
-    switch(c) {
-      case '1': use_item(player, 0); break;
-      case '2': use_item(player, 1); break;
-      case '3': use_item(player, 2); break;
-      case '4': use_item(player, 3); break;
-      case '5': use_item(player, 4); break;
-      case 'e': open_inventory();    break;
-      case 'Q':                      return 1;
-    }
-    return 0;
-  }
- 
-  /* normal game controls */
-  switch(c) {
-    case KEY_UP:    case 'k': move_player(player, map, 0, -1);  break;
-    case KEY_DOWN:  case 'j': move_player(player, map, 0, 1);   break;
-    case KEY_LEFT:  case 'h': move_player(player, map, -1, 0);  break;
-    case KEY_RIGHT: case 'l': move_player(player, map, 1, 0);   break;
-    case 'e': open_inventory(); break;
-    case '+': if (player->health < 3) player_heal_up(player);   break;
-    case '-': if (player->health > 0) player_heal_dn(player);   break;
-    case 'Q':                                                    return 1;
-  }
-  return 0;
+  return inventory_mode;
 }
 
-// control.c — open_inventory just toggles the flag
-static int inventory_open = 0;
-
-
-void open_inventory(void)
+static inline void swap_value_inventory(void)
 {
-    inventory_open = !inventory_open;
+  inventory_mode = !inventory_mode;
 }
-
-int is_inventory_open(void)
-{
-    return inventory_open;
-}
-
 
 void player_heal_up(Player *p)
 { 
@@ -77,7 +73,7 @@ void player_heal_dn(Player *p)
   if (p->health < 1) p->health = 0;
 }
 
-void pick_up(Map *map, Player *player, int y, int x)
+void pick_up(MAP_Structure *map, Player *player, int y, int x)
 {
   char item = map->layout[y][x]; // get position
 
@@ -92,7 +88,7 @@ void pick_up(Map *map, Player *player, int y, int x)
 }
 
 // Check if tile is walkable
-int is_walkable(Map *map, int x, int y, Player *player) {
+int is_walkable(MAP_Structure *map, int x, int y, Player *player) {
     if(x < 0 || y < 0 || y >= WG_HEIGHT || x >= (int)strlen(map->layout[y])) {
         return 0;
     }
@@ -107,7 +103,7 @@ int is_walkable(Map *map, int x, int y, Player *player) {
 }
 
 // Move player
-void move_player(Player *player, Map *map, int dx, int dy)
+void move_player(Player *player, MAP_Structure *map, int dy, int dx)
 {
     int new_x = player->x + dx;
     int new_y = player->y + dy;
