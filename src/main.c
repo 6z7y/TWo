@@ -1,6 +1,7 @@
 #include <ncurses.h>
 #include <unistd.h>
 
+#include "Episodes/EP1/novel_scene.h"
 #include "GAME_DATA.h"
 #include "control.h"
 #include "drwing.h"
@@ -21,6 +22,10 @@ int main(void)
   // 1. setup game
   setup_game(&game_ctx);
 
+  // show_cutscene(game_ctx.wind[2], CHAR_H, 1);
+  // show_cutscene(game_ctx.wind[2], CHAR_T, 2);
+  // werase(game_ctx.wind[2]);
+
   while (game_ctx.game_running) {
       getmaxyx(stdscr, y, x);
 
@@ -29,17 +34,18 @@ int main(void)
         continue;
       }
 
-      // 2. input handle
       c = getch();
-      if (handle_control(c, &game_ctx.player, &game_ctx.map) == 1) break;
+      if (game_ctx.state == STATE_GAME) {
+        // 2. input handle
+        if (handle_control(c, &game_ctx.player, &game_ctx.map) == 1) break;
+      }
 
-      // 4. ncurses drawing
-      render_game(game_ctx.w[0], game_ctx.w[1], game_ctx.ep, &game_ctx.player, frame, &game_ctx.map);
+      // 3. ncurses drawing
+      render_game(game_ctx.wind[0], game_ctx.wind[1], game_ctx.wind[2], game_ctx.ep, &game_ctx.player, frame, &game_ctx.map);
 
       // 4. update window
       wnoutrefresh(stdscr);
-      wnoutrefresh(game_ctx.w[0]);
-      wnoutrefresh(game_ctx.w[1]);
+      for (int i=0; i<3; i++) wnoutrefresh(game_ctx.wind[i]);
       doupdate();
 
       usleep(16000);  /* 60fps */
@@ -47,6 +53,6 @@ int main(void)
       update_T_animation(&anim_tick, &frame);
   }
 
-  ncurses_mode(0); // close ncurses
+  ncurses_mode(0);
   return 0;
 }
