@@ -8,7 +8,7 @@ void load_episode1(MAP_Structure *map)
 {
     /* basic info */
     strncpy(map->name, "Cave of Secrets", sizeof(map->name));
-    map->player_start_x = 15;
+    map->player_start_x = 20;
     map->player_start_y = 6;
     map->exit_x         = 40;
     map->exit_y         = 15;
@@ -18,13 +18,13 @@ void load_episode1(MAP_Structure *map)
     strncpy(map->layout[ 1], "                                                                                       ", WG_WIDTH);
     strncpy(map->layout[ 2], "                                                                                       ", WG_WIDTH);
     strncpy(map->layout[ 3], "                                                                                       ", WG_WIDTH);
-    strncpy(map->layout[ 4], "                                                                                       ", WG_WIDTH);
-    strncpy(map->layout[ 5], "          ||||||||||||||||||                                                           ", WG_WIDTH);
-    strncpy(map->layout[ 6], "          |                |                                                           ", WG_WIDTH);
-    strncpy(map->layout[ 7], "          |                |                                                           ", WG_WIDTH);
-    strncpy(map->layout[ 8], "          |                |                                                           ", WG_WIDTH);
-    strncpy(map->layout[ 9], "                           |                                                           ", WG_WIDTH);
-    strncpy(map->layout[10], "          ||||||||||||||||||                                                           ", WG_WIDTH);
+    strncpy(map->layout[ 4], "                   |||||||||||||||||||||                                               ", WG_WIDTH);
+    strncpy(map->layout[ 5], "                   |                   |                                              ", WG_WIDTH);
+    strncpy(map->layout[ 6], "                                       |                                              ", WG_WIDTH);
+    strncpy(map->layout[ 7], "                   |                   |                                              ", WG_WIDTH);
+    strncpy(map->layout[ 8], "                   |                   |                                              ", WG_WIDTH);
+    strncpy(map->layout[ 9], "                   |                   |                                              ", WG_WIDTH);
+    strncpy(map->layout[10], "                   |||||||||||||||||||||                                               ", WG_WIDTH);
     strncpy(map->layout[11], "                                                                                       ", WG_WIDTH);
     strncpy(map->layout[12], "                                                                                       ", WG_WIDTH);
     strncpy(map->layout[13], "                                                                                       ", WG_WIDTH);
