@@ -48,6 +48,7 @@ void ncurses_mode(int mode)
     init_pair(6, COLOR_WHITE,   COLOR_BLACK);
   }
   else {
+    printf("bye");
     endwin();
   }
 }
@@ -62,10 +63,12 @@ void setup_game(GAME_Context *game_ctx)
 {
   // game on
   game_ctx->game_running = 1;
+  game_ctx->state = STATE_CUTSCENE;
 
   // init window
-  game_ctx->w[0] = newwin(WG_HEIGHT, WG_WIDTH, WG_Y, WG_X);
-  game_ctx->w[1] = newwin(WIC_HEIGHT, WIC_WIDTH, WIC_Y, WIC_X);
+  game_ctx->wind[0] = newwin(WG_HEIGHT, WG_WIDTH, WG_Y, WG_X);
+  game_ctx->wind[1] = newwin(WIC_HEIGHT, WIC_WIDTH, WIC_Y, WIC_X);
+  game_ctx->wind[2] = newwin(WN_HEIGHT, WN_WIDTH, WN_Y, WN_X);
 
   // episode select
   // 3. select episode
