@@ -6,9 +6,11 @@
 // Tile types
 #define TILE_WALL '#'
 #define TILE_CAGE '|'
+#define TILE_BOX  '@'   // pushable object
+#define TILE_HOLE '_'   // target hole
+#define TILE_FILLED '.' // ← reuse '.' or pick new char — hole filled
 
-#define TILE_ITEM1 'C'
-#define TILE_ITEM2 'K'
+#define TILE_ITEM1 '%'
 
 #define TILE_EXIT1 'E' 
 #define TILE_EXIT2 'X'
@@ -34,11 +36,11 @@
 #define WIO_Y 38
 #define WIO_X 36
 
-// WINDOW Novel (right side)
-#define WN_HEIGHT 40
-#define WN_WIDTH  70
-#define WN_Y      2
-#define WN_X      95
+// WINDOW Second
+#define WS_HEIGHT 40
+#define WS_WIDTH  70
+#define WS_Y      2
+#define WS_X      95
 
 // #define NOVAL_CHAR_Y 15
 // #define NOVAL_CHAR_X 140
@@ -46,8 +48,12 @@
 typedef enum {
   CHAR_T,   // Player
   CHAR_W,   // kanojo T
-  CHAR_H,   // Boss EP1
-  CHAR_F    // friend
+  CHAR_P,   // Friend = Pixel
+  CHAR_F,   // friend = feno
+  CHAR_H,   // Boss EP1 = Havoc
+  CHAR_D,   // Boss EP2 = Dread
+  CHAR_S,   // Boss EP3 = Shade
+  CHAR_U,   // Boss EP4 / Final = Ultim
 
 } Noval_Character;
 
@@ -63,7 +69,7 @@ typedef enum {
     EP2_PRISON_BREAK = 2,
     EP3_BOSS_FIGHT = 3,
     EP4_HAPPY_ENDING = 4
-} Episode;
+} Define_Episode;
 // -----------
 
 // about ep map
@@ -83,6 +89,20 @@ typedef struct {
 } Player;
 // ----------------
 
+typedef struct {
+    int        player_y;   // where to move player on wind_game
+    int        player_x;   // -1 = don't move, keep current pos
+    Noval_Character who;   // who speaks on wind_noval
+    int        msg_id;     // -1 = no dialogue this step, just move
+} Cutscene_Step;
+
+typedef struct {
+  int trigger_y;          // tile position that fires this
+  int trigger_x;
+  int fired;              // 0 = not yet, 1 = already played
+  void (*fn)(WINDOW*, WINDOW*, Player*, MAP_Structure*);
+} Scene_Trigger;
+
 // Item structure for pickup
 typedef struct {
   char symbol;
@@ -95,11 +115,11 @@ typedef struct {
 // structure context
 typedef struct {
   int game_running;
-  Game_State state;
   WINDOW *wind[NUM_WINDOW];
-  MAP_Structure map;
-  Episode ep;
-  Player player;
+  Define_Episode ep; // define current episode
+  MAP_Structure map; // episode map
+  Game_State state; // state playing
+  Player player;    // player structure
 
 } GAME_Context;
 // -----------------
