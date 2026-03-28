@@ -3,8 +3,10 @@
 
 #include "../../GAME_DATA.h"
 
-const char *get_message(int msg_id);
-static inline const char *get_name(int who);
-void show_cutscene(WINDOW *win, Noval_Character who, int msg_id);
+void ep1_play_opening(WINDOW*, WINDOW*, Player*, MAP_Structure*);
+void ep1_play_ending(WINDOW*, WINDOW*, Player*, MAP_Structure*);  // ← add
+void ep1_check_triggers(WINDOW*, WINDOW*, Player*, MAP_Structure*);
+void show_cutscene(WINDOW*, Noval_Character, int);
+const char *get_message(int);
 
 #endif
