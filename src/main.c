@@ -22,9 +22,9 @@ int main(void)
   // 1. setup game
   setup_game(&game_ctx);
 
-  // show_cutscene(game_ctx.wind[2], CHAR_H, 1);
-  // show_cutscene(game_ctx.wind[2], CHAR_T, 2);
-  // werase(game_ctx.wind[2]);
+  ep1_play_opening(game_ctx.wind[0], game_ctx.wind[2], &game_ctx.player, &game_ctx.map);
+
+  game_ctx.state = STATE_GAME;
 
   while (game_ctx.game_running) {
       getmaxyx(stdscr, y, x);
@@ -35,11 +35,15 @@ int main(void)
       }
 
       c = getch();
-      if (game_ctx.state == STATE_GAME) {
+      // if (game_ctx.state == STATE_GAME) {
         // 2. input handle
-        if (handle_control(c, &game_ctx.player, &game_ctx.map) == 1) break;
-      }
-
+      if (handle_control(c, &game_ctx.player, &game_ctx.map) == 1) break;
+      // }
+      // game_ctx.state = STATE_CUTSCENE;
+        // ── check triggers after every move ──
+        ep1_check_triggers(
+        game_ctx.wind[0], game_ctx.wind[2],
+        &game_ctx.player, &game_ctx.map);
       // 3. ncurses drawing
       render_game(game_ctx.wind[0], game_ctx.wind[1], game_ctx.wind[2], game_ctx.ep, &game_ctx.player, frame, &game_ctx.map);
 
@@ -49,7 +53,6 @@ int main(void)
       doupdate();
 
       usleep(16000);  /* 60fps */
-
       update_T_animation(&anim_tick, &frame);
   }
 
