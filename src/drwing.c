@@ -206,7 +206,7 @@ static inline void draw_color(WINDOW *win, MAP_Structure *map, Player *player) {
             char tile = map->layout[i][j];
 
             if      (tile == TILE_WALL)                                              wattron(win, COLOR_PAIR(1));
-            else if (tile == TILE_ITEM1 || tile == TILE_ITEM2)                       wattron(win, COLOR_PAIR(3)); // green like items
+            else if (tile == TILE_ITEM1)                                             wattron(win, COLOR_PAIR(3)); // green like items
             else if (tile == TILE_EXIT1 || tile == TILE_EXIT2 || tile == TILE_EXIT3) wattron(win, COLOR_PAIR(5));
             else if (tile == TILE_CAGE)                                              wattron(win, COLOR_PAIR(1));
 
@@ -274,7 +274,7 @@ void draw_two(WINDOW *win, int top, int left, int hp, int frame)
     }
 }
 
-void render_game(WINDOW *wind_game, WINDOW *wind_inventory, WINDOW *wind_noval, Episode ep, Player *player, int frame, MAP_Structure *map)
+void render_game(WINDOW *wind_game, WINDOW *wind_inventory, WINDOW *wind_noval, Define_Episode ep, Player *player, int frame, MAP_Structure *map)
 {
     // ── 1. erase ALL windows first ──────────────────
     werase(stdscr);
@@ -315,9 +315,7 @@ void render_game(WINDOW *wind_game, WINDOW *wind_inventory, WINDOW *wind_noval, 
         mvwprintw(wind_inventory, 0, 2, " INVENTORY -- press 1-5 to use ");
         for (int i = 0; i < 5; i++) {
             char item = player->inventory[i];
-            const char *name = (item == TILE_ITEM1) ? "Chocolate"
-                             : (item == TILE_ITEM2) ? "Candy"
-                             :                        "-- empty --";
+            const char *name = (item == TILE_ITEM1) ? "pieces pizza" : "-- empty --";
             if (item == '.') {
                 mvwprintw(wind_inventory, 2 + i * 2, 3, "[%d]  .  %s", i + 1, name);
             } else {
