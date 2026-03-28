@@ -44,11 +44,11 @@ void use_item(Player *player, int slot)
  
   char item = player->inventory[slot];
  
-  if (item == TILE_ITEM1 || item == TILE_ITEM2) {
+  if (item == TILE_ITEM1) {
     player_heal_up(player);               /* chocolate heals */
   }
  
-  player->inventory[slot] = '.';          /* consume item */
+  player->inventory[slot] = ' ';          /* consume item */
 }
 
 int inventory_checker()
@@ -73,6 +73,34 @@ void player_heal_dn(Player *p)
   if (p->health < 1) p->health = 0;
 }
 
+// returns 1 if push succeeded, 0 if blocked
+static int try_push(MAP_Structure *map, int box_y, int box_x, int dy, int dx)
+{
+    int dest_y = box_y + dy;
+    int dest_x = box_x + dx;
+
+    // bounds check
+    if (dest_y < 0 || dest_y >= WG_HEIGHT) return 0;
+    if (dest_x < 0 || dest_x >= WG_WIDTH)  return 0;
+
+    char dest = map->layout[dest_y][dest_x];
+
+    if (dest == TILE_HOLE) {
+        // box falls into hole — both disappear, floor is walkable
+        map->layout[dest_y][dest_x] = ' ';   // hole filled = walkable
+        map->layout[box_y][box_x]   = ' ';   // box gone
+        return 1;
+    }
+
+    if (dest == ' ') {
+        // box slides to empty floor
+        map->layout[dest_y][dest_x] = TILE_BOX;
+        map->layout[box_y][box_x]   = ' ';
+        return 1;
+    }
+
+    return 0;  // wall or anything else — blocked
+}
 void pick_up(MAP_Structure *map, Player *player, int y, int x)
 {
   char item = map->layout[y][x]; // get position
@@ -97,7 +125,11 @@ int is_walkable(MAP_Structure *map, int x, int y, Player *player) {
     
     // Walkable tiles
     
-    if(tile == ' ' || tile == TILE_ITEM1 || tile == TILE_ITEM2) return 1;
+    if (tile == ' ')      return 1;
+    if (tile == TILE_ITEM1) return 1;
+    if (tile == TILE_EXIT1) return 1;  // ← add these
+    if (tile == TILE_EXIT2) return 1;
+    if (tile == TILE_EXIT3) return 1;
     
     return 0;
 }
@@ -107,23 +139,32 @@ void move_player(Player *player, MAP_Structure *map, int dy, int dx)
 {
     int new_x = player->x + dx;
     int new_y = player->y + dy;
-    
-    if(is_walkable(map, new_x, new_y, player)) {
-        char tile = map->layout[new_y][new_x];
-        
-        if (map->layout[new_y][new_x] == TILE_ITEM1)  pick_up(map, player, new_y, new_x);
-        if (map->layout[new_y][new_x] == TILE_ITEM2)  pick_up(map, player, new_y, new_x);
-        
-        // Check for exit
-        // if(tile == TILE_EXIT) {
-        //     mvprintw(LINES - 3, 4, "Congratulations! You escaped the cave!");
-        //     refresh();
-        //     napms(2000);
-        //     exit(0);
-        // }
-        
-        // Move player
+
+    if (new_y < 0 || new_y >= WG_HEIGHT) return;
+    if (new_x < 0 || new_x >= WG_WIDTH)  return;
+
+    char tile = map->layout[new_y][new_x];
+
+    // ── box push ──────────────────────────────────
+    if (tile == TILE_BOX) {
+        if (!try_push(map, new_y, new_x, dy, dx))
+            return;  // push blocked — player stays
+        // push succeeded — player moves into box's old spot
         player->x = new_x;
         player->y = new_y;
+        return;
+    }
+
+    // ── normal walkable ───────────────────────────
+    if (is_walkable(map, new_x, new_y, player)) {
+        if (tile == TILE_ITEM1) pick_up(map, player, new_y, new_x);
+        // if (tile == TILE_ITEM2) pick_up(map, player, new_y, new_x);
+
+        player->x = new_x;
+        player->y = new_y;
+
+        char t = map->layout[new_y][new_x];
+        if (t == TILE_EXIT1 || t == TILE_EXIT2 || t == TILE_EXIT3)
+            game_ctx.state = STATE_CUTSCENE;
     }
 }
