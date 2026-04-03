@@ -8,9 +8,11 @@
 
 #define TWO_ROWS 7
 
+void draw_color(WINDOW *win, MAP_Structure *map, Player *player);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #include <pthread.h>
 #include <unistd.h>
+
 
 // ── shared state ──────────────────────────────────
 typedef struct {
@@ -23,7 +25,7 @@ static pthread_t  crt_thread;
 static pthread_mutex_t crt_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 // ── the thread ────────────────────────────────────
-static void *crt_worker(void *arg) {
+void *crt_worker(void *arg) {
     (void)arg;
     int t = 0;
 
@@ -200,34 +202,13 @@ const char *health_ascii(int health)
     return "x x x";
 }
 
-static inline void draw_color(WINDOW *win, MAP_Structure *map, Player *player) {
-    for (int i = 0; i < WG_HEIGHT; i++) { // row
-        for (int j = 0; j < (int)strlen(map->layout[i]); j++) { // col
-            char tile = map->layout[i][j];
-
-            if      (tile == TILE_WALL)                                              wattron(win, COLOR_PAIR(1));
-            else if (tile == TILE_ITEM1)                                             wattron(win, COLOR_PAIR(3)); // green like items
-            else if (tile == TILE_EXIT1 || tile == TILE_EXIT2 || tile == TILE_EXIT3) wattron(win, COLOR_PAIR(5));
-            else if (tile == TILE_CAGE)                                              wattron(win, COLOR_PAIR(1));
-
-            mvwaddch(win, i + 1, j + 1, tile); /////////////////////////////////////////////////////////////////////////// here i stop
-
-            wattroff(win, COLOR_PAIR(1) | COLOR_PAIR(2) | COLOR_PAIR(3) | COLOR_PAIR(4) | COLOR_PAIR(5));
-        }
-    }
-    wattron(win, A_BOLD | COLOR_PAIR(1));
-    mvwprintw(win, player->y + 1, player->x + 1, "T");
-    wattroff(win, A_BOLD | COLOR_PAIR(1));
-}
-
-
 /* color pair IDs — must match what utils.c registers */
 static inline int color_for_T(int hp)
 {
-    if (hp == 3) return 3; /* green  = HAPPY */
-    if (hp == 2) return 2; /* yellow = MEH   */
-    if (hp == 1) return 1; /* red    = BAD   */
-    return 6;              /* white  = DEAD  */
+    if (hp == 3) return 4; /* green  = HAPPY */
+    if (hp == 2) return 9; /* yellow = MEH   */
+    if (hp == 1) return 2; /* red    = BAD   */
+    return 8;              /* white  = DEAD  */
 }
 
 void update_T_animation(int *anim_tick, int *frame)
@@ -274,28 +255,29 @@ void draw_two(WINDOW *win, int top, int left, int hp, int frame)
     }
 }
 
-void render_game(WINDOW *wind_game, WINDOW *wind_inventory, WINDOW *wind_noval, Define_Episode ep, Player *player, int frame, MAP_Structure *map)
+static int frame     = 0; // for animation T
+static int anim_tick = 0;
+
+void render_game(WINDOW *wind_game, WINDOW *wind_inventory, Define_Episode ep, Player *player, MAP_Structure *map)
 {
     // ── 1. erase ALL windows first ──────────────────
     werase(stdscr);
-    // werase(wind_game);
-    // NOTE: wind_inventory erased below (size changes)
 
     // ── 2. borders ──────────────────────────────────
     box(stdscr,        0, 0);
     box(wind_game,     0, 0);
-    box(wind_noval,    0, 0);
+    // box(wind_noval,    0, 0);
 
     // ── 3. titles (AFTER erase, AFTER box) ──────────
     mvprintw(0, 4, " TWo ");                          // stdscr title — works now
 
     wattron(wind_game, A_UNDERLINE);
-    mvwprintw(wind_game, 0, 2, " Ep1: kanojo helper ");
+    mvwprintw(wind_game, 0, 2, " %d: %s ", game_ctx.ep, game_ctx.map.name);
     wattroff(wind_game, A_UNDERLINE);
 
-    wattron(wind_noval, A_UNDERLINE);
-    mvwprintw(wind_noval, 0, 2, " Story ");
-    wattroff(wind_noval, A_UNDERLINE);
+    // wattron(wind_noval, A_UNDERLINE);
+    // mvwprintw(wind_noval, 0, 2, " Story ");
+    // wattroff(wind_noval, A_UNDERLINE);
 
     // ── 4. controls hint ────────────────────────────
     mvprintw(LINES - 2, 4, "Controls: [Arrow/(hjkl)]: Move | (+/-): health | (e): bag | (Q) Quit");
@@ -305,6 +287,7 @@ void render_game(WINDOW *wind_game, WINDOW *wind_inventory, WINDOW *wind_noval, 
 
     // ── 6. health bar ───────────────────────────────
     mvwprintw(stdscr, 45, 3, "Health: %s", health_ascii(player->health));
+    mvwprintw(stdscr, 47, 3, "x: %d, y: %d", game_ctx.player.x, game_ctx.player.y);
 
     // ── 7. inventory ────────────────────────────────
     werase(wind_inventory);
@@ -319,9 +302,9 @@ void render_game(WINDOW *wind_game, WINDOW *wind_inventory, WINDOW *wind_noval, 
             if (item == '.') {
                 mvwprintw(wind_inventory, 2 + i * 2, 3, "[%d]  .  %s", i + 1, name);
             } else {
-                wattron(wind_inventory, COLOR_PAIR(3) | A_BOLD);
+                // wattron(wind_inventory, COLOR_PAIR(3) | A_BOLD);
                 mvwprintw(wind_inventory, 2 + i * 2, 3, "[%d]  %c  %s", i + 1, item, name);
-                wattroff(wind_inventory, COLOR_PAIR(3) | A_BOLD);
+                // wattroff(wind_inventory, COLOR_PAIR(3) | A_BOLD);
             }
         }
         mvwprintw(wind_inventory, 11, 3, " press e to close ");
@@ -338,6 +321,7 @@ void render_game(WINDOW *wind_game, WINDOW *wind_inventory, WINDOW *wind_noval, 
     }
 
     // ── 8. T character animation ─────────────────────
+    update_T_animation(&anim_tick, &frame);
     draw_two(stdscr, 38, 4, player->health, frame);
 
     // ── 9. CRT effect ────────────────────────────────

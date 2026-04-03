@@ -3,14 +3,21 @@
 
 #include <ncurses.h>
 
+#define file_db "TWo_save.db"
+
 // Tile types
-#define TILE_WALL '#'
 #define TILE_CAGE '|'
-#define TILE_BOX  '@'   // pushable object
+#define TILE_ROCK  '@'   // pushable object
 #define TILE_HOLE '_'   // target hole
-#define TILE_FILLED '.' // ← reuse '.' or pick new char — hole filled
+// #define TILE_FILLED '.' // ← reuse '.' or pick new char — hole filled
+
+#define TILE_GRASS_1 ','
+#define TILE_GRASS_2 '\''
+#define TILE_GRASS_3 '"'
 
 #define TILE_ITEM1 '%'
+#define TILE_ITEM3 '^'
+#define TILE_ITEM2 '*'
 
 #define TILE_EXIT1 'E' 
 #define TILE_EXIT2 'X'
@@ -45,23 +52,26 @@
 // #define NOVAL_CHAR_Y 15
 // #define NOVAL_CHAR_X 140
 
+#define CHAR_T 'T' // Player
+#define CHAR_W 'W' // kanojo T
+#define CHAR_P 'P' // Friend = Pixel
+#define CHAR_F 'F' // friend = feno
+#define CHAR_H 'H' // Boss EP1 = Havoc
+#define CHAR_D 'D' // Boss EP2 = Dread
+#define CHAR_S 'S' // Boss EP3 = Shade
+#define CHAR_U 'U' // Boss EP4 / Final = Ultim
+
 typedef enum {
-  CHAR_T,   // Player
-  CHAR_W,   // kanojo T
-  CHAR_P,   // Friend = Pixel
-  CHAR_F,   // friend = feno
-  CHAR_H,   // Boss EP1 = Havoc
-  CHAR_D,   // Boss EP2 = Dread
-  CHAR_S,   // Boss EP3 = Shade
-  CHAR_U,   // Boss EP4 / Final = Ultim
+  NV_CHAR_T,   // Player
+  NV_CHAR_W,   // kanojo T
+  NV_CHAR_P,   // Friend = Pixel
+  NV_CHAR_F,   // friend = feno
+  NV_CHAR_H,   // Boss EP1 = Havoc
+  NV_CHAR_D,   // Boss EP2 = Dread
+  NV_CHAR_S,   // Boss EP3 = Shade
+  NV_CHAR_U,   // Boss EP4 / Final = Ultim
 
 } Noval_Character;
-
-typedef enum {
-  STATE_GAME,
-  STATE_CUTSCENE,
-  STATE_MENU,
-} Game_State;
 
 // for episode
 typedef enum {
@@ -87,6 +97,15 @@ typedef struct {
   int y, x;
   char inventory[5];
 } Player;
+// -------------==
+
+// Item structure for pickup
+typedef struct {
+  char symbol;
+  char name[20];
+  int value;
+  void (*effect)(Player *);
+} Item;
 // ----------------
 
 typedef struct {
@@ -97,20 +116,12 @@ typedef struct {
 } Cutscene_Step;
 
 typedef struct {
+  int fired;              // 0 = not yet, 1 = already played
   int trigger_y;          // tile position that fires this
   int trigger_x;
-  int fired;              // 0 = not yet, 1 = already played
   void (*fn)(WINDOW*, WINDOW*, Player*, MAP_Structure*);
 } Scene_Trigger;
 
-// Item structure for pickup
-typedef struct {
-  char symbol;
-  char name[20];
-  int value;
-  void (*effect)(Player *);
-} Item;
-// -------------------------
 
 // structure context
 typedef struct {
@@ -118,11 +129,10 @@ typedef struct {
   WINDOW *wind[NUM_WINDOW];
   Define_Episode ep; // define current episode
   MAP_Structure map; // episode map
-  Game_State state; // state playing
   Player player;    // player structure
 
 } GAME_Context;
-// -----------------
 
 extern GAME_Context game_ctx;
+
 #endif

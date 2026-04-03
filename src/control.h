@@ -10,7 +10,7 @@ void player_heal_up(Player *p);
 void player_heal_dn(Player *p);
 
 int inventory_checker();
-static inline void swap_value_inventory(void);
+void swap_value_inventory(void);
 
 void use_item(Player *player, int slot);
 void pick_up(MAP_Structure *map, Player *player, int y, int x);

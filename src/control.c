@@ -4,6 +4,7 @@
 
 #include "control.h"
 #include "GAME_DATA.h"
+#include "noval_visual.h"
 
 static int inventory_mode = 0;
 
@@ -56,7 +57,7 @@ int inventory_checker()
   return inventory_mode;
 }
 
-static inline void swap_value_inventory(void)
+void swap_value_inventory(void)
 {
   inventory_mode = !inventory_mode;
 }
@@ -94,7 +95,7 @@ static int try_push(MAP_Structure *map, int box_y, int box_x, int dy, int dx)
 
     if (dest == ' ') {
         // box slides to empty floor
-        map->layout[dest_y][dest_x] = TILE_BOX;
+        map->layout[dest_y][dest_x] = TILE_ROCK;
         map->layout[box_y][box_x]   = ' ';
         return 1;
     }
@@ -106,7 +107,7 @@ void pick_up(MAP_Structure *map, Player *player, int y, int x)
   char item = map->layout[y][x]; // get position
 
   for (int i=0; i<5; i++) { // check solt inventory
-    if (player->inventory[i] == '.') { // empty solt
+    if (player->inventory[i] == ' ') { // empty solt
       player->inventory[i] = item;
       map->layout[y][x] = ' ';
       return;
@@ -115,8 +116,10 @@ void pick_up(MAP_Structure *map, Player *player, int y, int x)
   // inventory full!
 }
 
+static int ep1_scene1_fired = 0;
+
 // Check if tile is walkable
-int is_walkable(MAP_Structure *map, int x, int y, Player *player) {
+int is_walkable(MAP_Structure *map, int x, int y) {
     if(x < 0 || y < 0 || y >= WG_HEIGHT || x >= (int)strlen(map->layout[y])) {
         return 0;
     }
@@ -124,16 +127,21 @@ int is_walkable(MAP_Structure *map, int x, int y, Player *player) {
     char tile = map->layout[y][x];
     
     // Walkable tiles
-    
     if (tile == ' ')      return 1;
     if (tile == TILE_ITEM1) return 1;
-    if (tile == TILE_EXIT1) return 1;  // ← add these
-    if (tile == TILE_EXIT2) return 1;
-    if (tile == TILE_EXIT3) return 1;
+    if (tile == TILE_GRASS_1 || tile == TILE_GRASS_2 || tile == TILE_GRASS_3) return 1;
+
+    // visual noval
+    if (game_ctx.ep == EP1_KIDNAPPING) {
+      if (game_ctx.player.y == 5 && game_ctx.player.x == 2 && !ep1_scene1_fired) {
+        ep1_scene1_fired = 1;
+        show_noval_visual(NV_CHAR_H, 3);
+        show_noval_visual(NV_CHAR_U, 3);
+      }
+    }
     
     return 0;
 }
-
 // Move player
 void move_player(Player *player, MAP_Structure *map, int dy, int dx)
 {
@@ -145,8 +153,9 @@ void move_player(Player *player, MAP_Structure *map, int dy, int dx)
 
     char tile = map->layout[new_y][new_x];
 
-    // ── box push ──────────────────────────────────
-    if (tile == TILE_BOX) {
+
+    // ── rock push ──────────────────────────────────
+    if (tile == TILE_ROCK) {
         if (!try_push(map, new_y, new_x, dy, dx))
             return;  // push blocked — player stays
         // push succeeded — player moves into box's old spot
@@ -155,16 +164,21 @@ void move_player(Player *player, MAP_Structure *map, int dy, int dx)
         return;
     }
 
+    if (player->y == 32 && player->x == 4) {
+      // game_ctx.game_running = 0;  // or set a win state
+      // ep1_play_ending(game_ctx.wind[0], game_ctx.wind[1], player, &game_ctx.map);
+
+    }
+
     // ── normal walkable ───────────────────────────
-    if (is_walkable(map, new_x, new_y, player)) {
+    if (is_walkable(map, new_x, new_y)) {
         if (tile == TILE_ITEM1) pick_up(map, player, new_y, new_x);
-        // if (tile == TILE_ITEM2) pick_up(map, player, new_y, new_x);
 
         player->x = new_x;
         player->y = new_y;
 
         char t = map->layout[new_y][new_x];
-        if (t == TILE_EXIT1 || t == TILE_EXIT2 || t == TILE_EXIT3)
-            game_ctx.state = STATE_CUTSCENE;
+        // if (t == TILE_EXIT1 || t == TILE_EXIT2 || t == TILE_EXIT3)
+        //     game_ctx.state = STATE_CUTSCENE;
     }
 }
