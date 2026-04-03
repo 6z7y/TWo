@@ -1,6 +1,6 @@
 CC := cc
 CFLAGS := -Wall -Wextra
-LIBS := -lncurses
+LIBS := -lncurses -lsqlite3
 
 PROG_NAME := TWo
 SRC_DIR := src
