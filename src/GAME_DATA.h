@@ -24,30 +24,36 @@
 #define TILE_EXIT3 'I'
 
 // how much window
-#define NUM_WINDOW 3
+#define NUM_WINDOW 4
 
-// WINDOW GAME
+// 1 WINDOW GAME
 #define WG_HEIGHT 35
 #define WG_WIDTH 90 // wid = 90 + \0
 #define WG_Y 2
 #define WG_X 3
 
-// WINDOW INVENTORY (Close/Open)
+// 2 WINDOW SECOND
+#define WS_HEIGHT 35
+#define WS_WIDTH 25
+#define WS_Y 2
+#define WS_X 94
+
+// 3 WINDOW Noval_visual
+#define WN_HEIGHT 10
+#define WN_WIDTH  70
+#define WN_Y      24
+#define WN_X      15
+
+// 4 WINDOW INVENTORY (Close/Open)
 #define WIC_HEIGHT 3
 #define WIC_WIDTH 21
-#define WIC_Y 40
-#define WIC_X 40
+#define WIC_Y 10
+#define WIC_X 96
 
 #define WIO_HEIGHT 14
-#define WIO_WIDTH 37
-#define WIO_Y 38
-#define WIO_X 36
-
-// WINDOW Second
-#define WS_HEIGHT 40
-#define WS_WIDTH  70
-#define WS_Y      2
-#define WS_X      95
+#define WIO_WIDTH 26
+#define WIO_Y 10
+#define WIO_X 95
 
 // #define NOVAL_CHAR_Y 15
 // #define NOVAL_CHAR_X 140
