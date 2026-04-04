@@ -197,8 +197,8 @@ static const char *art[4][3][TWO_ROWS] = {
 const char *health_ascii(int health)
 {
     if (health == 3) return "❤ ❤ ❤";
-    if (health == 2) return "❤ ❤  ";
-    if (health == 1) return "❤    ";
+    if (health == 2) return " ❤ ❤ ";
+    if (health == 1) return "  ❤  ";
     return "x x x";
 }
 
@@ -258,14 +258,20 @@ void draw_two(WINDOW *win, int top, int left, int hp, int frame)
 static int frame     = 0; // for animation T
 static int anim_tick = 0;
 
-void render_game(WINDOW *wind_game, WINDOW *wind_inventory, Define_Episode ep, Player *player, MAP_Structure *map)
+void render_game(Define_Episode ep, Player *player, MAP_Structure *map)
 {
+  WINDOW *wind_game = game_ctx.wind[0];
+  WINDOW *wind_second = game_ctx.wind[1];
+  // WINDOW *wind_noval = game_ctx.wind[3];
+  WINDOW *wind_inventory = game_ctx.wind[3];
     // ── 1. erase ALL windows first ──────────────────
+    werase(wind_second);  // add this before drawing wind_second
     werase(stdscr);
 
     // ── 2. borders ──────────────────────────────────
     box(stdscr,        0, 0);
     box(wind_game,     0, 0);
+    box(game_ctx.wind[1],     0, 0);
     // box(wind_noval,    0, 0);
 
     // ── 3. titles (AFTER erase, AFTER box) ──────────
@@ -286,8 +292,11 @@ void render_game(WINDOW *wind_game, WINDOW *wind_inventory, Define_Episode ep, P
     draw_color(wind_game, map, player);
 
     // ── 6. health bar ───────────────────────────────
-    mvwprintw(stdscr, 45, 3, "Health: %s", health_ascii(player->health));
-    mvwprintw(stdscr, 47, 3, "x: %d, y: %d", game_ctx.player.x, game_ctx.player.y);
+    mvwprintw(wind_second, 1, 10, "%s", health_ascii(player->health));
+    mvwprintw(wind_second, 33, 2, "x: %d, y: %d", game_ctx.player.x, game_ctx.player.y);
+
+    update_T_animation(&anim_tick, &frame);
+    draw_two(wind_second, 2, 6, player->health, frame);
 
     // ── 7. inventory ────────────────────────────────
     werase(wind_inventory);
@@ -295,7 +304,7 @@ void render_game(WINDOW *wind_game, WINDOW *wind_inventory, Define_Episode ep, P
         wresize(wind_inventory, WIO_HEIGHT, WIO_WIDTH);
         mvwin(wind_inventory,   WIO_Y, WIO_X);
         box(wind_inventory, 0, 0);
-        mvwprintw(wind_inventory, 0, 2, " INVENTORY -- press 1-5 to use ");
+        mvwprintw(wind_inventory, 0, 2, " INVENTORY ");
         for (int i = 0; i < 5; i++) {
             char item = player->inventory[i];
             const char *name = (item == TILE_ITEM1) ? "pieces pizza" : "-- empty --";
@@ -307,7 +316,7 @@ void render_game(WINDOW *wind_game, WINDOW *wind_inventory, Define_Episode ep, P
                 // wattroff(wind_inventory, COLOR_PAIR(3) | A_BOLD);
             }
         }
-        mvwprintw(wind_inventory, 11, 3, " press e to close ");
+        mvwprintw(wind_inventory, 13, 3, " press e to close ");
     } else {
         wresize(wind_inventory, WIC_HEIGHT, WIC_WIDTH);
         mvwin(wind_inventory,   WIC_Y, WIC_X);
@@ -319,10 +328,6 @@ void render_game(WINDOW *wind_game, WINDOW *wind_inventory, Define_Episode ep, P
             player->inventory[4]);
         mvwprintw(wind_inventory, 2, 2, " press e ");
     }
-
-    // ── 8. T character animation ─────────────────────
-    update_T_animation(&anim_tick, &frame);
-    draw_two(stdscr, 38, 4, player->health, frame);
 
     // ── 9. CRT effect ────────────────────────────────
     if (player->health == 1 && !crt.active) {
