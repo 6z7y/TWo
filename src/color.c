@@ -25,7 +25,7 @@ void setup_color()
 
   // assume_default_colors(COLOR_WHITE, COLOR_BLACK);
 
-  init_pair(1, 10,     10);   // 1: tile + bg red
+  init_pair(1, 10,     10);   // 1: tile + bg Brown
   init_pair(2, COLOR_RED,     COLOR_BLACK); // 2: health 1
   init_pair(3, COLOR_BLUE,    COLOR_BLACK); // 3: ???
   init_pair(4, COLOR_GREEN,   COLOR_BLACK); // 4: grass & health 3
@@ -33,7 +33,7 @@ void setup_color()
   init_pair(6, COLOR_MAGENTA, COLOR_BLACK); // 6: characters
   init_pair(7, COLOR_CYAN,    COLOR_BLACK); // 7: Exit
   init_pair(8, COLOR_WHITE,   COLOR_BLACK); // 8: other
-  init_pair(9, 9, COLOR_BLACK); // 9
+  init_pair(9, 9, COLOR_BLACK); // 9: ???
   init_pair(10, 10, COLOR_BLACK); // 10 items
 }
 
