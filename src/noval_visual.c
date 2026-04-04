@@ -4,8 +4,8 @@
 #include "GAME_DATA.h"
 
 // drawing art
-#define y_d 24
-#define x_d 8
+#define y_d 2
+#define x_d 2
 
 static inline void draw_T_art(WINDOW *w) {
     mvwprintw(w, y_d+0, x_d, "  +-----+  ");
@@ -18,18 +18,12 @@ static inline void draw_T_art(WINDOW *w) {
 
 
 static inline void draw_H_art(WINDOW *w) {
-    
-
   mvwprintw(w, y_d+0, x_d, "|____| |____|");
   mvwprintw(w, y_d+0, x_d, "|    | |    |");
   mvwprintw(w, y_d+1, x_d, "| o  | |  o |");
   mvwprintw(w, y_d+2, x_d, "|    |_|    |");
   mvwprintw(w, y_d+3, x_d, "|           |");
-  mvwprintw(w, y_d+4, x_d, "|    | |    |");
   mvwprintw(w, y_d+6, x_d, "|____| |____|");
-  mvwprintw(w, y_d+6, x_d, "|    | |    |");
-  mvwprintw(w, y_d+6, x_d, "|____| |____|");
-  mvwprintw(w, y_d+6, x_d, "  \\(     )/  ");
 }
 
 static inline void draw_W_art(WINDOW *w) {
@@ -76,7 +70,7 @@ static inline const char *get_name(Noval_Character who) {
 // ── show one dialogue line in wind_second ──────────
 void show_noval_visual(Noval_Character who, int msg_id)
 {
-  WINDOW *win = game_ctx.wind[1];
+  WINDOW *win = game_ctx.wind[2];
 
     werase(win);
     box(win, 0, 0);
@@ -92,15 +86,14 @@ void show_noval_visual(Noval_Character who, int msg_id)
 
     // Zone 2: speaker name — get_name not get_message!
     wattron(win, A_BOLD);
-    mvwprintw(win, 29, 1, " [ %s ]", get_name(who));
+    mvwprintw(win, 0, 1, " [ %s ]", get_name(who));
     wattroff(win, A_BOLD);
 
     // Zone 3: separator + message
-    mvwhline(win, 29, 8, ACS_HLINE, WS_WIDTH - 2);
-    mvwprintw(win, 31, 3, "%s", get_message(msg_id));
+    mvwprintw(win, 2, 12, "%s", get_message(msg_id));
 
     // Zone 4: hint
-    mvwprintw(win, WS_HEIGHT - 2, 2, "[ SPACE = nex_dt ]");
+    mvwprintw(win, WN_HEIGHT - 1, WN_WIDTH - 16, " SPACE = next ");
 
     wrefresh(win);
 
