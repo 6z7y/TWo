@@ -3,7 +3,7 @@
 #include <locale.h>
 
 #include "GAME_DATA.h"
-#include "Episodes/include_helper.h"
+// #include "Episodes/include_helper.h"
 #include "noval_visual.h"
 #include "save.h"
 // #include "drwing.h"
@@ -47,7 +47,8 @@ void setup_game(GAME_Context *game_ctx)
     // ── windows FIRST ─────────────────────────────
     game_ctx->wind[0] = newwin(WG_HEIGHT, WG_WIDTH, WG_Y, WG_X);
     game_ctx->wind[1] = newwin(WS_HEIGHT, WS_WIDTH, WS_Y, WS_X);
-    game_ctx->wind[2] = newwin(WIC_HEIGHT, WIC_WIDTH, WIC_Y, WIC_X);
+    game_ctx->wind[2] = newwin(WN_HEIGHT, WN_WIDTH, WN_Y, WN_X);
+    game_ctx->wind[3] = newwin(WIC_HEIGHT, WIC_WIDTH, WIC_Y, WIC_X);
 
     // ── then load map from save ────────────────────
     load_current_episode(&game_ctx->ep);
