@@ -61,3 +61,8 @@ $ `sudo apk add ncurses-dev sqlite-dev`
 $ `make`<br>
 $ `./TWo`
 
+## Note
+
+This Project is my first game, made for practice. My father told me to make a game with a story. So here it is.
+
+Thank you for playing.
