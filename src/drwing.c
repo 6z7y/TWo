@@ -4,6 +4,7 @@
 
 #include "Episodes/include_helper.h"
 #include "control.h"
+#include "visual_noval.h"
 #include "drwing.h"
 
 #define TWO_ROWS 7
@@ -88,7 +89,7 @@ static const char *art[4][3][TWO_ROWS] = {
     /* ── 0  DEAD ──────────────────────────────── */
     {{
         " +---------+ ",
-        " |  X    X | ",
+        " | 'X    X | ",
         " +----+----+ ",
         "      |      ",
         "      .      ",
@@ -96,7 +97,7 @@ static const char *art[4][3][TWO_ROWS] = {
         "             ",
     },{
         " +---------+ ",
-        " |  X    X | ",
+        " | 'X    X | ",
         " +----+----+ ",
         "      |      ",
         "      .      ",
@@ -104,7 +105,7 @@ static const char *art[4][3][TWO_ROWS] = {
         "             ",
     },{
         " +---------+ ",
-        " |  x    x | ",
+        " | 'x    x | ",
         " +----+----+ ",
         "      |      ",
         "      .      ",
@@ -115,7 +116,7 @@ static const char *art[4][3][TWO_ROWS] = {
     /* ── 1  BAD ───────────────────────────────── */
     {{
         " +---------+ ",
-        " |  x    x | ",
+        " | 'x    x | ",
         " +----+----+ ",
         "      |      ",
         "      |      ",
@@ -123,7 +124,7 @@ static const char *art[4][3][TWO_ROWS] = {
         "             ",
     },{
         " +---------+ ",
-        " |  x    - | ",
+        " | 'x    - | ",
         " +----+----+ ",
         "      |      ",
         "      |      ",
@@ -131,7 +132,7 @@ static const char *art[4][3][TWO_ROWS] = {
         "             ",
     },{
         " +---------+ ",
-        " |  -    x | ",
+        " | '-    x | ",
         " +----+----+ ",
         "      |      ",
         "      |      ",
@@ -142,7 +143,7 @@ static const char *art[4][3][TWO_ROWS] = {
     /* ── 2  MEH ───────────────────────────────── */
     {{
         " +---------+ ",
-        " |  -    - | ",
+        " | '-    - | ",
         " +----+----+ ",
         "      |      ",
         "      |      ",
@@ -150,7 +151,7 @@ static const char *art[4][3][TWO_ROWS] = {
         "             ",
     },{
         " +---------+ ",
-        " |  .    - | ",
+        " | '.    - | ",
         " +----+----+ ",
         "      |      ",
         "      |      ",
@@ -158,7 +159,7 @@ static const char *art[4][3][TWO_ROWS] = {
         "             ",
     },{
         " +---------+ ",
-        " |  -    . | ",
+        " | '-    . | ",
         " +----+----+ ",
         "      |      ",
         "      |      ",
@@ -169,7 +170,7 @@ static const char *art[4][3][TWO_ROWS] = {
     /* ── 3  HAPPY ─────────────────────────────── */
     {{
         " +---------+ ",
-        " |  ^    ^ | ",
+        " | '^    ^ | ",
         " +----+----+ ",
         "      |      ",
         "      |      ",
@@ -177,7 +178,7 @@ static const char *art[4][3][TWO_ROWS] = {
         "             ",
     },{
         " +---------+ ",
-        " |  o    o | ",
+        " | 'o    o | ",
         " +----+----+ ",
         "      |      ",
         "      |      ",
@@ -185,7 +186,7 @@ static const char *art[4][3][TWO_ROWS] = {
         "             ",
     },{
         " +---------+ ",
-        " |  ^    ^ | ",
+        " | '^    ^ | ",
         " +----+----+ ",
         "      |      ",
         "      |      ",
@@ -257,6 +258,7 @@ void draw_two(WINDOW *win, int top, int left, int hp, int frame)
 
 static int frame     = 0; // for animation T
 static int anim_tick = 0;
+static int timer_60s = 60;
 
 void render_game(Define_Episode ep, Player *player, MAP_Structure *map)
 {
@@ -281,10 +283,6 @@ void render_game(Define_Episode ep, Player *player, MAP_Structure *map)
     mvwprintw(wind_game, 0, 2, " %d: %s ", game_ctx.ep, game_ctx.map.name);
     wattroff(wind_game, A_UNDERLINE);
 
-    // wattron(wind_noval, A_UNDERLINE);
-    // mvwprintw(wind_noval, 0, 2, " Story ");
-    // wattroff(wind_noval, A_UNDERLINE);
-
     // ── 4. controls hint ────────────────────────────
     mvprintw(LINES - 2, 4, "Controls: [Arrow/(hjkl)]: Move | (+/-): health | (e): bag | (Q) Quit");
 
@@ -298,6 +296,17 @@ void render_game(Define_Episode ep, Player *player, MAP_Structure *map)
     update_T_animation(&anim_tick, &frame);
     draw_two(wind_second, 2, 6, player->health, frame);
 
+    if (game_ctx.timer) {
+      game_ctx.now = time(NULL);
+      mvwprintw(game_ctx.wind[1], 14, 10, "%d, %d", 119 - (game_ctx.now - game_ctx.start), game_ctx.rocks);
+
+      if ( 119 - (game_ctx.now - game_ctx.start) <= 0) {
+        game_ctx.player.health--;
+        show_noval_visual(NV_CHAR_D, "GAME_OVER");
+        game_ctx.game_running = 0;
+      }
+    }
+
     // ── 7. inventory ────────────────────────────────
     werase(wind_inventory);
     if (inventory_checker()) {
@@ -307,13 +316,15 @@ void render_game(Define_Episode ep, Player *player, MAP_Structure *map)
         mvwprintw(wind_inventory, 0, 2, " INVENTORY ");
         for (int i = 0; i < 5; i++) {
             char item = player->inventory[i];
-            const char *name = (item == TILE_ITEM1) ? "pieces pizza" : "-- empty --";
-            if (item == '.') {
-                mvwprintw(wind_inventory, 2 + i * 2, 3, "[%d]  .  %s", i + 1, name);
+            char *name = 
+              (item == ITEM1) ? "Pieces pizza" :
+              (item == ITEM2) ? "cake" :
+              (item == ITEM3) ? "Bulldozer" :
+              "-- empty --";
+            if (item == ' ') {
+                mvwprintw(wind_inventory, 2 + i * 2, 3, "[%d]  %s", i + 1, name);
             } else {
-                // wattron(wind_inventory, COLOR_PAIR(3) | A_BOLD);
                 mvwprintw(wind_inventory, 2 + i * 2, 3, "[%d]  %c  %s", i + 1, item, name);
-                // wattroff(wind_inventory, COLOR_PAIR(3) | A_BOLD);
             }
         }
         mvwprintw(wind_inventory, 13, 3, " press e to close ");
