@@ -14,6 +14,7 @@ void swap_value_inventory(void);
 
 void use_item(Player *player, int slot);
 void pick_up(MAP_Structure *map, Player *player, int y, int x);
+void player_heal_dn_swap_control(Player *p);
 
 void move_player(Player *player, MAP_Structure *map, int dy, int dx);
 
