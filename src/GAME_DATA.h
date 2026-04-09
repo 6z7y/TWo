@@ -9,7 +9,8 @@
 // functions
 #define LEN(x) (sizeof(x)/sizeof(x[0]))
 #define for_each_arr(a) for (int i=0; i<LEN(a); i++)
-#define for_each_num(a) for (int i=0; i<a; i++)
+#define for_each_num_one(a) for (int i=0; i<a; i++)
+#define for_each_num_two(a) for (int j=0; j<a; j++)
 
 // Tile types
 #define TILE_CAGE '|'
@@ -68,18 +69,17 @@
 #define CHAR_W 'W' // kanojo T
 #define CHAR_F 'F' // friend = feno
 #define CHAR_H 'P' // Boss EP1 = Pixel
-#define CHAR_D 'D' // Boss EP2 = Dread
-#define CHAR_S 'S' // Boss EP3 = Shade
+#define CHAR_D 'G' // Boss EP2 = Gfed
+#define CHAR_S 'S' // Boss EP3 = Shallot
 #define CHAR_U 'U' // Boss EP4 / Final = Ultim
 
 typedef enum {
-  NV_CHAR_T,   // Player
-  NV_CHAR_W,   // kanojo T
-  NV_CHAR_F,   // friend = feno
-  NV_CHAR_P,   // Boss EP1 = Pixel
-  NV_CHAR_D,   // Boss EP2 = Dread
-  NV_CHAR_S,   // Boss EP3 = Shade
-  NV_CHAR_U,   // Boss EP4 / Final = Ultim
+  VN_CHAR_T,   // Player
+  VN_CHAR_W,   // kanojo T
+  VN_CHAR_P,   // Boss EP1 = Pixel
+  VN_CHAR_G,   // Boss EP2 = Gfed
+  VN_CHAR_S,   // Boss EP3 = Shallot
+  VN_CHAR_U,   // Boss EP4 = = Ultim
 
 } Noval_Character;
 
