@@ -82,10 +82,10 @@ void load_current_episode(Define_Episode *ep)
     }
 
     if (*ep == EP3) {
-      load_episode2(&game_ctx.map);
+      load_episode3(&game_ctx.map);
     }
 
     if (*ep == EP4) {
-      load_episode2(&game_ctx.map);
+      load_episode4(&game_ctx.map);
     }
 }
