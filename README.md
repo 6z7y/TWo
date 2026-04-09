@@ -56,9 +56,6 @@ $ `sudo xbps-install ncurses-devel sqlite-devel`
 $ `sudo apk add ncurses-dev sqlite-dev`
 
 ## Build & Run
-```bash
-grim slurp wl-clipboard
-```
 
 $ `make`<br>
 $ `./TWo`
