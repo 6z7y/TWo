@@ -34,8 +34,6 @@ int handle_control(int c, Player *player, MAP_Structure *map)
       case KEY_LEFT:  case 'l': move_player(player, map, 0, -1);  break;
       case KEY_RIGHT: case 'h': move_player(player, map, 0, 1);   break;
       case 'e':                 swap_value_inventory();           break;
-      // case '+': if (player->health < 3) player_heal_up(player);   break;
-      // case '-': if (player->health > 0) player_heal_dn(player);   break;
       case 'Q':                                                   return 1;
     } 
   }
@@ -46,8 +44,6 @@ int handle_control(int c, Player *player, MAP_Structure *map)
       case KEY_LEFT:  case 'h': move_player(player, map, 0, -1);  break;
       case KEY_RIGHT: case 'l': move_player(player, map, 0, 1);   break;
       case 'e':                 swap_value_inventory();           break;
-      // case '+': if (player->health < 3) player_heal_up(player);   break;
-      // case '-': if (player->health > 0) player_heal_dn(player);   break;
       case 'Q':                                                   return 1;
     }
   }
@@ -64,15 +60,17 @@ void use_item(Player *player, int slot)
  
   if (item == ITEM1) {
     player_heal_up(player);
+    player->inventory[slot] = ' ';          /* consume item */
   }
   else if (item == ITEM2) {
     player_heal_dn_swap_control(player);
+    player->inventory[slot] = ' ';          /* consume item */
   }
 
-  // if (item == ITEM3) {
-  // }
+  if (item == ITEM3) {
+    return;
+  }
  
-  player->inventory[slot] = ' ';          /* consume item */
 }
 
 int inventory_checker()
@@ -90,6 +88,7 @@ void player_heal_up(Player *p)
   p->health++;
   if (p->health > 3) p->health = 3;
 
+  game_ctx.swap_control = 0;
   game_ctx.timer = 0;
 }
 
@@ -133,6 +132,44 @@ static int try_push(MAP_Structure *map, int box_y, int box_x, int dy, int dx)
 
     return 0;  // wall or anything else — blocked
 }
+
+void dig_with_bulldozer(MAP_Structure *map, Player *player, int y, int x)
+{
+    // Check if player has bulldozer in inventory
+    int has_bulldozer = 0;
+    int bulldozer_slot = -1;
+    
+    for (int i = 0; i < 5; i++) {
+        if (player->inventory[i] == ITEM3) {
+            has_bulldozer = 1;
+            bulldozer_slot = i;
+            break;
+        }
+    }
+    
+    if (!has_bulldozer) {
+        return;
+    }
+    
+    // Dig on 'x' tile
+    if (map->layout[y][x] == 'x') {
+        map->layout[y][x] = ' ';  // Remove the dig spot
+        
+        // ONLY give key at specific position (example: position 15, 15)
+        // Change these coordinates to where you want the key to be
+        if (y == 21 && x == 71) {
+          show_noval_visual(NV_CHAR_T, "i found it the keys '&'");
+            // Add key to inventory
+            for (int i = 0; i < 5; i++) {
+                if (player->inventory[i] == ' ') {
+                    player->inventory[i] = ITEM4;
+                    return;
+                }
+            }
+        }
+    }
+}
+
 void pick_up(MAP_Structure *map, Player *player, int y, int x)
 {
   char item = map->layout[y][x]; // get position
@@ -186,6 +223,42 @@ void move_player(Player *player, MAP_Structure *map, int dy, int dx)
         player->x = new_x;
         player->y = new_y;
         return;
+    }
+
+    // ── Bulldozer digging on 'x' ──────────────────────────────────
+    if (tile == 'x') {
+        // Check if player has bulldozer
+        int has_bulldozer = 0;
+        for (int i = 0; i < 5; i++) {
+            if (player->inventory[i] == ITEM3) {
+                has_bulldozer = 1;
+                break;
+            }
+        }
+        
+        if (has_bulldozer) {
+            dig_with_bulldozer(map, player, new_y, new_x);
+            return;  // Don't move onto the 'x'
+        } else {
+            show_noval_visual(NV_CHAR_T, "i Need bulldozer (^)");
+            return;
+        }
+    }
+
+    // ── Check exit with key requirement for EP3 ──────────────────
+    if (player->y == 32 && player->x == 4) {
+        // For EP3, require key to exit
+        if (game_ctx.ep == EP3) {
+            int has_key = 0;
+            int key_slot = -1;
+            for (int i = 0; i < 5; i++) {
+                if (player->inventory[i] == ITEM4) {
+                    has_key = 1;
+                    key_slot = i;
+                    break;
+                }
+            }
+        }
     }
 
     if (player->y == 32 && player->x == 4) {
