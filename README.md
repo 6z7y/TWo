@@ -1,5 +1,7 @@
 # TWo - The Journey
 
+**A Terminal UI (TUI) Adventure Game**
+
 T and W are best friends. W is a woman. One day W disappears. T wakes up alone in a strange forest with no memory of how he got there.
 
 ## Demo
@@ -8,7 +10,6 @@ T and W are best friends. W is a woman. One day W disappears. T wakes up alone i
 ## Story
 
 Find W and uncover the mystery behind her disappearance. Travel through different episodes, solve puzzles, defeat bosses of episode, and save your friend.
-
 
 - 4 Episodes with unique maps
 - Collect and use items
@@ -56,6 +57,6 @@ $ sudo apk add ncurses-dev sqlite-dev
 
 ## Build & Run
 
-$ make
-$ ./TWo
+$ **make**
+$ **./TWo**
 
