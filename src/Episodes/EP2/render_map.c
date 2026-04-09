@@ -20,7 +20,7 @@ void load_episode2(MAP_Structure *map)
     strncpy(map->layout[ 2], "                                                |                                      ", WG_WIDTH);
     strncpy(map->layout[ 3], "                                       |||||||||||||||||||||||||||||||||||             ", WG_WIDTH);
     strncpy(map->layout[ 4], "                                       |                        |_ _|    |             ", WG_WIDTH);
-    strncpy(map->layout[ 5], " D                                     |                        |   |    |             ", WG_WIDTH);
+    strncpy(map->layout[ 5], " G                                     |                        |   |    |             ", WG_WIDTH);
     strncpy(map->layout[ 6], "                                       ||||||||||||||||||||||||||   |    |             ", WG_WIDTH);
     strncpy(map->layout[ 7], "                                                                    ||||||             ", WG_WIDTH);
     strncpy(map->layout[ 8], "                                                                        _|             ", WG_WIDTH);
