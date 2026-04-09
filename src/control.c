@@ -29,10 +29,10 @@ int handle_control(int c, Player *player, MAP_Structure *map)
   /* normal game controls */
   if (game_ctx.swap_control) {
     switch(c) {
-      case KEY_UP:    case 'j': move_player(player, map, -1, 0);  break;
-      case KEY_DOWN:  case 'k': move_player(player, map, 1, 0);   break;
-      case KEY_LEFT:  case 'l': move_player(player, map, 0, -1);  break;
-      case KEY_RIGHT: case 'h': move_player(player, map, 0, 1);   break;
+      case KEY_DOWN:    case 'j': move_player(player, map, -1, 0);  break;
+      case KEY_UP:  case 'k': move_player(player, map, 1, 0);   break;
+      case KEY_RIGHT:  case 'l': move_player(player, map, 0, -1);  break;
+      case KEY_LEFT: case 'h': move_player(player, map, 0, 1);   break;
       case 'e':                 swap_value_inventory();           break;
       case 'Q':                                                   return 1;
     } 
@@ -98,8 +98,8 @@ void player_heal_dn_swap_control(Player *p)
   if (p->health < 1) p->health = 0;
 
   game_ctx.swap_control = 1;
-  show_noval_visual(NV_CHAR_D, "..hh");
-  show_noval_visual(NV_CHAR_T, "what is this");
+  show_noval_visual(VN_CHAR_G, "..hh");
+  show_noval_visual(VN_CHAR_T, "what is this");
   inventory_mode = 0;
 }
 
@@ -158,7 +158,7 @@ void dig_with_bulldozer(MAP_Structure *map, Player *player, int y, int x)
         // ONLY give key at specific position (example: position 15, 15)
         // Change these coordinates to where you want the key to be
         if (y == 21 && x == 71) {
-          show_noval_visual(NV_CHAR_T, "i found it the keys '&'");
+          show_noval_visual(VN_CHAR_T, "i found it the keys '&'");
             // Add key to inventory
             for (int i = 0; i < 5; i++) {
                 if (player->inventory[i] == ' ') {
@@ -240,7 +240,7 @@ void move_player(Player *player, MAP_Structure *map, int dy, int dx)
             dig_with_bulldozer(map, player, new_y, new_x);
             return;  // Don't move onto the 'x'
         } else {
-            show_noval_visual(NV_CHAR_T, "i Need bulldozer (^)");
+            show_noval_visual(VN_CHAR_T, "i Need bulldozer (^)");
             return;
         }
     }
@@ -275,6 +275,13 @@ void move_player(Player *player, MAP_Structure *map, int dy, int dx)
         game_ctx.reload_game = 1;
       }
       else if (game_ctx.ep == EP4) {
+        show_noval_visual(999, "After that...");
+        show_noval_visual(999, "Together, [T] and [W] started a new life");
+        show_noval_visual(999, "And soon, their family grew");
+        show_noval_visual(999, "After marriage, they had a child named [o]");
+        show_noval_visual(999, "This is the end of TWo.");
+        show_noval_visual(999, "Thanks for playing!");
+        show_noval_visual(999, "The Developer: 6z7y");
         game_ctx.game_running = 0;
       }
     }
