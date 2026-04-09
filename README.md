@@ -1,6 +1,6 @@
 # TWo - The Journey (TUI Game)
 
-**A Terminal UI (TUI) Adventure Game**
+**A Terminal UI (TUI) Adventure Game / Visual Novel**
 
 T and W are best friends. W is a woman. One day W disappears. T wakes up alone in a strange forest with no memory of how he got there.
 
@@ -12,6 +12,7 @@ T and W are best friends. W is a woman. One day W disappears. T wakes up alone i
 Find W and uncover the mystery behind her disappearance. Travel through different episodes, solve puzzles, defeat bosses of episode, and save your friend.
 
 - 4 Episodes with unique maps
+- Visual Novel style dialogue with character portraits
 - Collect and use items
 - each episode have mini game
 - Timer-based challenges
