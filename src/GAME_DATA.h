@@ -15,7 +15,6 @@
 #define TILE_CAGE '|'
 #define TILE_ROCK  '@'   // pushable object
 #define TILE_HOLE '_'   // target hole
-// #define TILE_FILLED '.' // ← reuse '.' or pick new char — hole filled
 
 #define TILE_GRASS_1 ','
 #define TILE_GRASS_2 '\''
@@ -24,6 +23,7 @@
 #define ITEM1 '%' // pizza
 #define ITEM2 '*' // spoiled cake
 #define ITEM3 '^' // Bulldozer
+#define ITEM4 '&' // keys
 
 #define TILE_EXIT1 'E' 
 #define TILE_EXIT2 'X'
