@@ -2,6 +2,9 @@
 
 T and W are best friends. W is a woman. One day W disappears. T wakes up alone in a strange forest with no memory of how he got there.
 
+## Demo
+![TWo Gameplay](/demo.gif)
+
 ## Story
 
 Find W and uncover the mystery behind her disappearance. Travel through different episodes, solve puzzles, defeat bosses of episode, and save your friend.
@@ -13,8 +16,6 @@ Find W and uncover the mystery behind her disappearance. Travel through differen
 - Timer-based challenges
 - Auto-save progress with SQLite
 
-## Demo
-![TWo Gameplay](/demo.gif)
 
 ## Controls
 
@@ -57,3 +58,4 @@ $ sudo apk add ncurses-dev sqlite-dev
 
 $ make
 $ ./TWo
+
