@@ -56,7 +56,7 @@ void draw_color(WINDOW *win, MAP_Structure *map, Player *player)
                 wattron(win, COLOR_PAIR(7));  // Cyan for exits (you had 5)
             }
 
-            else if (tile == CHAR_H || tile == CHAR_D || tile == CHAR_S || tile == CHAR_U) {
+            else if (tile == CHAR_H || tile == CHAR_D || tile == CHAR_S || tile == CHAR_U || tile == CHAR_W) {
                 wattron(win, COLOR_PAIR(6) | A_BOLD);  // Magenta with bold for special objects
             }
 
