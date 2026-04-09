@@ -302,7 +302,7 @@ void render_game(Define_Episode ep, Player *player, MAP_Structure *map)
 
       if ( 119 - (game_ctx.now - game_ctx.start) <= 0) {
         game_ctx.player.health--;
-        show_noval_visual(NV_CHAR_D, "GAME_OVER");
+        show_noval_visual(VN_CHAR_G, "GAME_OVER");
         game_ctx.game_running = 0;
       }
     }
