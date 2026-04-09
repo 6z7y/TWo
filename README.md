@@ -32,9 +32,9 @@ Find W and uncover the mystery behind her disappearance. Travel through differen
 |--------|-----------|
 | T | Player (You) |
 | W | Missing woman (best friend) |
-| P | Boss Episode 1 |
-| D | Boss Episode 2 |
-| S | Boss Episode 3 |
+| P | Boss Episode 1 Pixel |
+| G | Boss Episode 2 Gfed|
+| S | Boss Episode 3 Shallot|
 | U | Final Boss |
 
 ## Requirements
