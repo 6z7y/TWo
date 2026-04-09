@@ -1,4 +1,4 @@
-# TWo - The Journey (TUI Game)
+# TWo - The Journey
 
 **A Terminal UI (TUI) Adventure Game / Visual Novel**
 
