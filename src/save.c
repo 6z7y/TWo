@@ -6,7 +6,7 @@
 #include "GAME_DATA.h"
 #include "Episodes/include_helper.h"
 
-#define NAME_FILE "/tmp/TWo_save.db" /////////////////////////////////////////////////////// change it later to .cache $HOME
+#define NAME_FILE "/tmp/TWo_save.db"
 
 static sqlite3 *sql;
 
@@ -14,10 +14,10 @@ int my_callback(void *data, int argc, char **argv, char **col_name) {
     (void)data; (void)argc; (void)col_name;
 
     int val = atoi(argv[0]);  // ← val now, not id
-    if      (val == 1) game_ctx.ep = EP1_KIDNAPPING;
-    else if (val == 2) game_ctx.ep = EP2_PRISON_BREAK;
-    else if (val == 3) game_ctx.ep = EP3_BOSS_FIGHT;
-    else               game_ctx.ep = EP4_HAPPY_ENDING;
+    if      (val == 1) game_ctx.ep = EP1;
+    else if (val == 2) game_ctx.ep = EP2;
+    else if (val == 3) game_ctx.ep = EP3;
+    else               game_ctx.ep = EP4;
     return 0;
 }
 
@@ -74,10 +74,18 @@ void load_current_episode(Define_Episode *ep)
     *ep = game_ctx.ep;
 
     // now the checks work
-    if (*ep == EP1_KIDNAPPING)  { 
+    if (*ep == EP1)  { 
       load_episode1(&game_ctx.map);
     }
-    if (*ep == EP2_PRISON_BREAK) {
+    if (*ep == EP2) {
+      load_episode2(&game_ctx.map);
+    }
+
+    if (*ep == EP3) {
+      load_episode2(&game_ctx.map);
+    }
+
+    if (*ep == EP4) {
       load_episode2(&game_ctx.map);
     }
 }
