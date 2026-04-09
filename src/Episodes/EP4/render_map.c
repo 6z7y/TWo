@@ -48,13 +48,4 @@ void load_episode4(MAP_Structure *map)
     strncpy(map->layout[30], "         |                                                                             ", WG_WIDTH);
     strncpy(map->layout[31], "         |                                                                             ", WG_WIDTH);
     strncpy(map->layout[32], "[EXI ]   |                                                                             ", WG_WIDTH);
-
-    wattron(game_ctx.wind[0], A_UNDERLINE | COLOR_PAIR(1));
-    map->layout[4][1] = 'D';
-    wattroff(game_ctx.wind[0], A_UNDERLINE | COLOR_PAIR(1));
-
-    /* you can now program changes here — e.g. add a trap at runtime:
-     *   map->layout[20][30] = TILE_POTION;
-     *   map->layout[5][50]  = TILE_KEY;
-     */
 }
