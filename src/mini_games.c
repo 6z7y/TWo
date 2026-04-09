@@ -35,6 +35,8 @@ not_yet:
   char c;
 
   mvwprintw(wind, 5, 30, "GOAL: '$' '$' '$'");
+  mvwprintw(wind, 7, 4, "Press SPACE to stop each column");
+  mvwprintw(wind, 8, 5, "Stop left -> middle -> right");
 
   while(!(s1 == STOP && s2 == STOP && s3 == STOP)) {
 
@@ -68,13 +70,13 @@ not_yet:
     usleep(400000);
   }
 
-  mvwprintw(wind, 6, 4, "Result: %c %c %c", list[(i1 + 1) % 4], list[(i2 + 1) % 4], list[(i3 + 1) % 4]);
+  mvwprintw(wind, 1, 19, "Result: %c %c %c", list[(i1 + 1) % 4], list[(i2 + 1) % 4], list[(i3 + 1) % 4]);
   if (list[(i1 + 1) % 4] == '$' && list[(i2 + 1) % 4] == '$' && list[(i3 + 1) % 4] == '$') {
-    mvwprintw(wind, 7, 4, "u win! Press [Space]");
+    mvwprintw(wind, 2, 19, "u win! Press [Space]");
     wrefresh(wind);
 
   } else {
-    mvwprintw(wind, 7, 4, "u lose reset!!");
+    mvwprintw(wind, 2, 19, "u lose reset!!");
     goto not_yet;
 
   }
