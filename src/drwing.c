@@ -320,6 +320,7 @@ void render_game(Define_Episode ep, Player *player, MAP_Structure *map)
               (item == ITEM1) ? "Pieces pizza" :
               (item == ITEM2) ? "cake" :
               (item == ITEM3) ? "Bulldozer" :
+              (item == ITEM4) ? "keys" :
               "-- empty --";
             if (item == ' ') {
                 mvwprintw(wind_inventory, 2 + i * 2, 3, "[%d]  %s", i + 1, name);
