@@ -4,7 +4,7 @@
 #include "GAME_DATA.h"
 #include "control.h"
 #include "drwing.h"
-#include "noval_visual.h"
+#include "visual_noval.h"
 #include "menu.h"
 #include "utils.h"
 
@@ -22,6 +22,7 @@ int main(void)
   // menu_section();
   
   // 1. setup game
+reinit:
   setup_game(&game_ctx);
 
   while (game_ctx.game_running) {
@@ -44,6 +45,8 @@ int main(void)
       wnoutrefresh(stdscr);
       for (int i=0; i<NUM_WINDOW; i++) wnoutrefresh(game_ctx.wind[i]);
       doupdate();
+
+      if (game_ctx.reload_game) goto reinit;
 
       usleep(16000);  /* 60fps */
   }
