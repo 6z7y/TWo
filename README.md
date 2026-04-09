@@ -1,4 +1,4 @@
-# TWo - The Journey
+# TWo - The Journey (TUI Game)
 
 **A Terminal UI (TUI) Adventure Game**
 
@@ -41,22 +41,25 @@ Find W and uncover the mystery behind her disappearance. Travel through differen
 ## Requirements
 
 **Debian/Ubuntu:**
-$ sudo apt install libncurses-dev libsqlite3-dev
+$ `sudo apt install libncurses-dev libsqlite3-dev`
 
 **Fedora:**
-$ sudo dnf install ncurses-devel sqlite-devel
+$ `sudo dnf install ncurses-devel sqlite-devel`
 
 **Arch Linux:**
-$ sudo pacman -S ncurses sqlite
+$ `sudo pacman -S ncurses sqlite`
 
 **Void Linux:**
-$ sudo xbps-install ncurses-devel sqlite-devel
+$ `sudo xbps-install ncurses-devel sqlite-devel`
 
 **Alpine Linux:**
-$ sudo apk add ncurses-dev sqlite-dev
+$ `sudo apk add ncurses-dev sqlite-dev`
 
 ## Build & Run
+```bash
+grim slurp wl-clipboard
+```
 
-$ **make**
-$ **./TWo**
+$ `make`<br>
+$ `./TWo`
 
