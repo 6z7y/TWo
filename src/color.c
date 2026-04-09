@@ -48,7 +48,7 @@ void draw_color(WINDOW *win, MAP_Structure *map, Player *player)
               wattron(win, COLOR_PAIR(1));  // Red for cages
             }
 
-            else if (tile == TILE_ITEM1 || tile == TILE_ITEM2 || tile == TILE_ITEM3) {
+            else if (tile == ITEM1 || tile == ITEM2 || tile == ITEM3) {
                 wattron(win, COLOR_PAIR(9));  // Brown for items (you had 3, but 4 is GREEN)
             }
 
@@ -71,13 +71,11 @@ void draw_color(WINDOW *win, MAP_Structure *map, Player *player)
             // Draw the character
             mvwaddch(win, i + 1, j + 1, tile);
             
-            // Turn off ONLY the color that was turned on
-            // Better approach: save the attribute before turning on, then restore
             if (tile == TILE_CAGE) {
               wattroff(win, COLOR_PAIR(1));
             }
 
-            else if (tile == TILE_ITEM1 || tile == TILE_ITEM2 || tile == TILE_ITEM3) {
+            else if (tile == ITEM1 || tile == ITEM2 || tile == ITEM3) {
                 wattroff(win, COLOR_PAIR(9));
             }
 
