@@ -9,8 +9,8 @@ void load_episode2(MAP_Structure *map)
 {
     /* basic info */
     strncpy(map->name, "Cave of Secrets", sizeof(map->name));
-    map->player_start_x = 20;
-    map->player_start_y = 6;
+    map->player_start_x = 0;
+    map->player_start_y = 0;
     map->exit_x         = 40;
     map->exit_y         = 15;
 
@@ -20,10 +20,10 @@ void load_episode2(MAP_Structure *map)
     strncpy(map->layout[ 2], "                                                |                                      ", WG_WIDTH);
     strncpy(map->layout[ 3], "                                       |||||||||||||||||||||||||||||||||||             ", WG_WIDTH);
     strncpy(map->layout[ 4], "                                       |                        |_ _|    |             ", WG_WIDTH);
-    strncpy(map->layout[ 5], "D                                      |                        |   |    |             ", WG_WIDTH);
+    strncpy(map->layout[ 5], " D                                     |                        |   |    |             ", WG_WIDTH);
     strncpy(map->layout[ 6], "                                       ||||||||||||||||||||||||||   |    |             ", WG_WIDTH);
     strncpy(map->layout[ 7], "                                                                    ||||||             ", WG_WIDTH);
-    strncpy(map->layout[ 8], "                            @                                           _|             ", WG_WIDTH);
+    strncpy(map->layout[ 8], "                                                                        _|             ", WG_WIDTH);
     strncpy(map->layout[ 9], "                                       |||||||||||||||||||||||||||||||||||             ", WG_WIDTH);
     strncpy(map->layout[10], "                                       |                                 |             ", WG_WIDTH);
     strncpy(map->layout[11], "                                       |                                 |             ", WG_WIDTH);
@@ -38,16 +38,16 @@ void load_episode2(MAP_Structure *map)
     strncpy(map->layout[20], "                                                  |                      |             ", WG_WIDTH);
     strncpy(map->layout[21], "                                                  |                      |             ", WG_WIDTH);
     strncpy(map->layout[22], "                                                  |                      |             ", WG_WIDTH);
-    strncpy(map->layout[23], "                     @                            |                                    ", WG_WIDTH);
+    strncpy(map->layout[23], "                                                  |                                    ", WG_WIDTH);
     strncpy(map->layout[24], "                                                  |                                    ", WG_WIDTH);
     strncpy(map->layout[25], "                                                  |                                    ", WG_WIDTH);
     strncpy(map->layout[26], "                                                  |                                    ", WG_WIDTH);
     strncpy(map->layout[27], "                                                  |                                    ", WG_WIDTH);
-    strncpy(map->layout[28], "                                                  |                                    ", WG_WIDTH);
-    strncpy(map->layout[29], "                                  @               |                                    ", WG_WIDTH);
-    strncpy(map->layout[30], "                                                  |                                    ", WG_WIDTH);
-    strncpy(map->layout[31], "                                                  |                                    ", WG_WIDTH);
-    strncpy(map->layout[32], "[EXI ]                                            |                                    ", WG_WIDTH);
+    strncpy(map->layout[28], "||||||||||                                        |                                    ", WG_WIDTH);
+    strncpy(map->layout[29], "         |                                        |                                    ", WG_WIDTH);
+    strncpy(map->layout[30], "     %   |                                        |                                    ", WG_WIDTH);
+    strncpy(map->layout[31], "         |                                        |                                    ", WG_WIDTH);
+    strncpy(map->layout[32], "[EXI ]   |                                        |                                    ", WG_WIDTH);
 
 
     /* you can now program changes here — e.g. add a trap at runtime:
@@ -55,28 +55,3 @@ void load_episode2(MAP_Structure *map)
      *   map->layout[5][50]  = TILE_KEY;
      */
 }
-
-// /* ── episode 2 : placeholder ─────────────────────── */
-// void load_episode2(MAP_Structure *map)
-// {
-//     strncpy(map->name, "Prison Break", sizeof(map->name));
-//     map->player_start_x = 5;
-//     map->player_start_y = 5;
-//     map->key_x          = 60;
-//     map->key_y          = 20;
-//
-//     /* fill all rows with walls first */
-//     for (int i = 0; i < WG_HEIGHT; i++) {
-//         for (int j = 0; j < WG_WIDTH; j++)
-//             map->layout[i][j] = '|';
-//         map->layout[i][WG_WIDTH] = '\0';
-//     }
-//
-//     /* carve out inside */
-//     for (int i = 1; i < WG_HEIGHT - 1; i++)
-//         for (int j = 1; j < WG_WIDTH - 1; j++)
-//             map->layout[i][j] = ' ';
-//
-//     /* place exit */
-//     map->layout[20][70] = TILE_EXIT;
-// }
