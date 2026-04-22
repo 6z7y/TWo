@@ -58,7 +58,7 @@ $ `sudo apk add ncurses-dev sqlite-dev`
 
 ## Build & Run
 
-$ `make`<br>
+$ `make'
 $ `./TWo`
 
 ## Note
