@@ -284,7 +284,7 @@ void render_game(Define_Episode ep, Player *player, MAP_Structure *map)
     wattroff(wind_game, A_UNDERLINE);
 
     // ── 4. controls hint ────────────────────────────
-    mvprintw(LINES - 2, 4, "Controls: [Arrow/(hjkl)]: Move | (+/-): health | (e): bag | (Q) Quit");
+    mvprintw(LINES - 2, 4, "Controls: [Arrow/(hjkl)]: Move | (e): bag | (Q) Quit");
 
     // ── 5. game map ─────────────────────────────────
     draw_color(wind_game, map, player);

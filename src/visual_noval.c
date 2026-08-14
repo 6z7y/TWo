@@ -143,9 +143,9 @@ void visual_noval_checker()
       show_noval_visual(VN_CHAR_P, "... you won");
       game_ctx.map.layout[29][9] = ' '; // open door
       show_noval_visual(VN_CHAR_P, "the door is open now.");
-      show_noval_visual(VN_CHAR_P, "there an pizza eat it");
-      show_noval_visual(VN_CHAR_P, "get [W] from [U]! and quit");
-      show_noval_visual(VN_CHAR_T, "thanks for your help me.");
+      show_noval_visual(VN_CHAR_P, "there is a pizza, eat it");
+      show_noval_visual(VN_CHAR_P, "get [W] from [U]! and leave");
+      show_noval_visual(VN_CHAR_T, "thanks for helping me.");
     }
   }
 
@@ -155,9 +155,9 @@ void visual_noval_checker()
       ep2_scene1_fired = 1;
       show_noval_visual(VN_CHAR_T, "hello");
       show_noval_visual(VN_CHAR_G, "hello");
-      show_noval_visual(VN_CHAR_T, "i want see your boss [U]");
+      show_noval_visual(VN_CHAR_T, "i want to see your boss [U]");
       show_noval_visual(VN_CHAR_G, "ohh i see, i have a cake, if u want");
-      show_noval_visual(VN_CHAR_G, "u must have power for fight him");
+      show_noval_visual(VN_CHAR_G, "u must have power to fight him");
       show_noval_visual(VN_CHAR_T, "sure");
       game_ctx.map.layout[9][4] = '*';
       show_noval_visual(VN_CHAR_G, "take it and eat it, then go");
@@ -167,16 +167,16 @@ void visual_noval_checker()
 
     else if (game_ctx.player.y == 5 && game_ctx.player.x == 2 && ep2_scene1_fired == 1 && game_ctx.player.health == 1) {
       ep2_scene1_fired = 2;
-      show_noval_visual(VN_CHAR_T, "what is this? why i can't control right?");
+      show_noval_visual(VN_CHAR_T, "what is this? why can't i control right?");
       show_noval_visual(VN_CHAR_G, "HAHAH!!!! this is a spoiled cake, enjoy");
-      show_noval_visual(VN_CHAR_G, "if you want real food u must do something");
+      show_noval_visual(VN_CHAR_G, "if you want real food, you must do something");
       game_ctx.map.layout[28][34] = '@';
       game_ctx.map.layout[8][19] = '@';
       game_ctx.map.layout[14][19] = '@';
-      show_noval_visual(VN_CHAR_G, "there a 3 rooks");
-      show_noval_visual(VN_CHAR_G, "i want from you push 3 rocks into the holes '_'");
-      show_noval_visual(VN_CHAR_T, "but why u do it this?");
-      show_noval_visual(VN_CHAR_G, "you have 2 minutes or you die, look in right window");
+      show_noval_visual(VN_CHAR_G, "there are 3 rocks");
+      show_noval_visual(VN_CHAR_G, "i want you to push 3 rocks into the holes '_'");
+      show_noval_visual(VN_CHAR_T, "but why do you do this?");
+      show_noval_visual(VN_CHAR_G, "you have 2 minutes or you'll die, look in the right window");
       game_ctx.timer = 1;
       game_ctx.start = time(NULL);
       game_ctx.player.y = 6;
@@ -185,12 +185,12 @@ void visual_noval_checker()
 
     else if (game_ctx.player.y == 5 && game_ctx.player.x == 2 && game_ctx.rocks == 3 && ep2_scene1_fired == 2) {
       ep2_scene1_fired = 3;
-      show_noval_visual(VN_CHAR_G, "well done you win");
+      show_noval_visual(VN_CHAR_G, "well done, you win");
       show_noval_visual(VN_CHAR_G, "take the real food over there");
       game_ctx.map.layout[27][14] = '%';
-      show_noval_visual(VN_CHAR_G, "when you eat it u will be fine");
-      show_noval_visual(VN_CHAR_G, "u will find [U] you must win for get [W]");
-      show_noval_visual(VN_CHAR_T, ".., i will don't tell me what i do");
+      show_noval_visual(VN_CHAR_G, "when you eat it, you will be fine");
+      show_noval_visual(VN_CHAR_G, "you will find [U], you must win to get [W]");
+      show_noval_visual(VN_CHAR_T, ".., i won't tell me what i do");
       show_noval_visual(VN_CHAR_T, "see ya");
       game_ctx.map.layout[29][9] = ' '; // open door
     }
@@ -202,11 +202,11 @@ void visual_noval_checker()
       ep3_scene1_fired = 1;
       show_noval_visual(VN_CHAR_T, "hello old man");
       show_noval_visual(VN_CHAR_S, "hello");
-      show_noval_visual(VN_CHAR_T, "i want come to [U] if you know where him");
+      show_noval_visual(VN_CHAR_T, "i want to go to [U], if you know where he is");
       show_noval_visual(VN_CHAR_S, "he's further ahead, and she is with him");
       show_noval_visual(VN_CHAR_T, "her? u mean [W]?");
       show_noval_visual(VN_CHAR_S, "yeah i mean it");
-      show_noval_visual(VN_CHAR_S, "if u want quit from here u must get my keys");
+      show_noval_visual(VN_CHAR_S, "if u want to leave from here, you must get my keys");
       show_noval_visual(VN_CHAR_S, "find my keys, they're hidden under 'x'");
       show_noval_visual(VN_CHAR_S, "i'll give u my Bulldozer '^', and find it from 'x'");
       show_noval_visual(VN_CHAR_T, "i'll find the key");
@@ -214,8 +214,8 @@ void visual_noval_checker()
     }
 
     else if (game_ctx.player.y == 5 && game_ctx.player.x == 2 && game_ctx.player.inventory[1] == '&') {
-      show_noval_visual(VN_CHAR_T, "i found it the keys");
-      show_noval_visual(VN_CHAR_S, "ohh nice nice u can quit from here thank you");
+      show_noval_visual(VN_CHAR_T, "i found the keys");
+      show_noval_visual(VN_CHAR_S, "ohh nice nice, u can leave from here, thank you");
       game_ctx.player.inventory[0] = ' ';
       game_ctx.player.inventory[1] = ' ';
       game_ctx.map.layout[29][9] = ' '; // open door
@@ -229,20 +229,20 @@ void visual_noval_checker()
       show_noval_visual(VN_CHAR_U, "hello [T]");
       show_noval_visual(VN_CHAR_T, "[U] ..!");
       show_noval_visual(VN_CHAR_W, "[T] help me!!");
-      show_noval_visual(VN_CHAR_T, "why you do this [U] answer!");
+      show_noval_visual(VN_CHAR_T, "why do you do this [U]? answer!");
       show_noval_visual(VN_CHAR_U, "hh, you forget?");
       show_noval_visual(VN_CHAR_T, "forget what?");
-      show_noval_visual(VN_CHAR_U, "anyway i want play with u game");
-      show_noval_visual(VN_CHAR_U, "if you win, you leave with [W]. but if i win i can kill u");
-      show_noval_visual(VN_CHAR_T, "what? what is this game make me played for life or died?");
+      show_noval_visual(VN_CHAR_U, "anyway i want to play a game with u");
+      show_noval_visual(VN_CHAR_U, "if you win, you leave with [W]. but if i win, i can kill u");
+      show_noval_visual(VN_CHAR_T, "what? what is this game? will it make me live or die?");
       show_noval_visual(VN_CHAR_U, "Tic-Tac-Toe (X/O)");
-      show_noval_visual(VN_CHAR_U, "you have 3 tryes or i will kill u");
-      show_noval_visual(VN_CHAR_U, "are u ready? for died =)");
-      show_noval_visual(VN_CHAR_T, "i ready");
+      show_noval_visual(VN_CHAR_U, "you have 3 tries or i will kill u");
+      show_noval_visual(VN_CHAR_U, "are u ready? to die =)");
+      show_noval_visual(VN_CHAR_T, "i'm ready");
       tic_tac_toe_game();
       show_noval_visual(VN_CHAR_U, "good job [T]");
       show_noval_visual(VN_CHAR_U, "take [W] and leave");
-      show_noval_visual(VN_CHAR_T, "but your not anser me, why you take her?");
+      show_noval_visual(VN_CHAR_T, "but you didn't answer me, why did you take her?");
       show_noval_visual(VN_CHAR_U, "I'm just evil. that's what bad people do.");
       show_noval_visual(VN_CHAR_T, "..");
       game_ctx.map.layout[11][60] = ' ';
@@ -250,8 +250,11 @@ void visual_noval_checker()
     }
 
     if (game_ctx.player.y == 11 && game_ctx.player.x == 61 && game_ctx.map.layout[11][62] == 'W') {
-      show_noval_visual(VN_CHAR_T, "[W]! we must get are there now!");
-      show_noval_visual(VN_CHAR_T, "hm");
+      show_noval_visual(VN_CHAR_T, "[W]! we must get there now!");
+      show_noval_visual(VN_CHAR_W, "...finally.");
+      show_noval_visual(VN_CHAR_W, "i thought i'd never get out of there...");
+      show_noval_visual(VN_CHAR_T, "let's go, we don't have much time.");
+      show_noval_visual(VN_CHAR_W, "yeah... let's go.");
       game_ctx.map.layout[11][62] = ' ';
       game_ctx.map.layout[30][5] = 'W';
     }
